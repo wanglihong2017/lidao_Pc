@@ -324,7 +324,7 @@
 import { Loading } from 'element-ui'
 import { getList, userAdd, remove, setRole, update } from '@/api/system/user'
 // import { parseTime } from '@/utils/index'
-// import { getTokens } from '@/utils/auth'
+import { getToken } from '@/api/api'
 import { roleTreeListByIdUser, roleOpts } from '@/api/system/role'
 // 权限判断指令
 export default {
@@ -397,7 +397,8 @@ export default {
       total: 0,
       list: null,
       listLoading: true,
-      selRow: {}
+      selRow: {},
+      setTokens: ''
     }
   },
   filters: {
@@ -435,6 +436,12 @@ export default {
   },
   created () {
     this.init()
+    getToken().then((res) => {
+      const { code, data } = res
+      if (code === '0') {
+        this.setTokens = data
+      }
+    })
   },
   methods: {
     init () {

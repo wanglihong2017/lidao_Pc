@@ -756,6 +756,14 @@
     "@babel/types" "^7.4.4"
     "esutils" "^2.0.2"
 
+"@babel/runtime-corejs2@^7.10.2":
+  "integrity" "sha512-CI3EpUqXzoPOKa7hOzObVDh9RAz2j0fNpW56u85/8oY9+27od2QXwtwJ12LW3aZ3jqmc5lu91czL/79wFkb41w=="
+  "resolved" "https://registry.npmjs.org/@babel/runtime-corejs2/-/runtime-corejs2-7.19.4.tgz"
+  "version" "7.19.4"
+  dependencies:
+    "core-js" "^2.6.12"
+    "regenerator-runtime" "^0.13.4"
+
 "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
   "integrity" "sha512-64AF1xY3OAkFHqOb9s4jpgk1Mm5vDZ4L3acHvAml+53nO1XbXLuDodsVpO4OIUsmemlUHMxNdYMNJmsvOwLrvQ=="
   "resolved" "https://registry.npmjs.org/@babel/runtime/-/runtime-7.9.6.tgz"
@@ -3138,6 +3146,11 @@
   "integrity" "sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg=="
   "resolved" "https://registry.npmjs.org/core-js/-/core-js-2.6.11.tgz"
   "version" "2.6.11"
+
+"core-js@^2.6.12":
+  "integrity" "sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ=="
+  "resolved" "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz"
+  "version" "2.6.12"
 
 "core-js@^3.4.3", "core-js@^3.6.4":
   "integrity" "sha512-vZVEEwZoIsI+vPEuoF9Iqf5H7/M3eeQqWlQnYa8FSKKePuYTf5MWnxb5SDAzCa60b3JBRS5g9b+Dq7b1y/RCrA=="
@@ -8685,6 +8698,15 @@
   "resolved" "https://registry.nlark.com/q/download/q-1.5.1.tgz"
   "version" "1.5.1"
 
+"qiniu-js@^3.4.1":
+  "integrity" "sha512-8vxrLqDPlJUk3fUAaTozh3TAT3ww9B5KqGogmGuTiFHnewXDoMxTCSY5z8Ab5UNdrCo6ZxDM07G/o++CICRUFw=="
+  "resolved" "https://registry.npmjs.org/qiniu-js/-/qiniu-js-3.4.1.tgz"
+  "version" "3.4.1"
+  dependencies:
+    "@babel/runtime-corejs2" "^7.10.2"
+    "querystring" "^0.2.1"
+    "spark-md5" "^3.0.0"
+
 "qs@^6.11.0":
   "integrity" "sha512-MvjoMCJwEarSbUYk5O+nmoSzSutSsTwF85zcHPQ9OrlFoZOYIjaqBAJIqIXjptyD5vThxGq52Xu/MaJzRkIk4Q=="
   "resolved" "https://registry.npmjs.org/qs/-/qs-6.11.0.tgz"
@@ -8713,6 +8735,11 @@
 "querystring-es3@^0.2.0":
   "integrity" "sha1-nsYfeQSYdXB9aUFFlv2Qek1xHnM="
   "resolved" "https://registry.npm.taobao.org/querystring-es3/download/querystring-es3-0.2.1.tgz"
+  "version" "0.2.1"
+
+"querystring@^0.2.1":
+  "integrity" "sha512-wkvS7mL/JMugcup3/rMitHmd9ecIGd2lhFhK9N3UUQ450h66d1r3Y9nvXzQAW1Lq+wyx61k/1pfKS5KuKiyEbg=="
+  "resolved" "https://registry.npmjs.org/querystring/-/querystring-0.2.1.tgz"
   "version" "0.2.1"
 
 "querystring@0.2.0":
@@ -9618,6 +9645,11 @@
   "integrity" "sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g=="
   "resolved" "https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz"
   "version" "0.6.1"
+
+"spark-md5@^3.0.0":
+  "integrity" "sha512-wcFzz9cDfbuqe0FZzfi2or1sgyIrsDwmPwfZC4hiNidPdPINjeUwNfv5kldczoEAcjl9Y1L3SM7Uz2PUEQzxQw=="
+  "resolved" "https://registry.npmjs.org/spark-md5/-/spark-md5-3.0.2.tgz"
+  "version" "3.0.2"
 
 "spdx-correct@^3.0.0":
   "integrity" "sha512-lr2EZCctC2BNR7j7WzJ2FpDznxky1sjfxvvYEyzxNyb6lZXHODmEoJeFu4JupYlkfha1KZpJyoqiJ7pgA1qq8Q=="

@@ -24,7 +24,7 @@ export function remove (params) {
 // 获取token
 export function getToken (params) {
   return request({
-    url: baseUrl + '/luckyfish/qiniu/v1/getToken?' + $qs.stringify(params),
+    url: baseUrl + '/luckyfish/manager_qiniu/v1/getToken?' + $qs.stringify(params),
     method: 'get'
   })
 }
