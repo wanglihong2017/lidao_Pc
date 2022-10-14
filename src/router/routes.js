@@ -48,6 +48,15 @@ const frameIn = [
         },
         component: _import('page/invitation')
       },
+      {
+        path: 'keyword',
+        name: 'keyword',
+        meta: {
+          title: '帖子管理',
+          auth: true
+        },
+        component: _import('page/keyword')
+      },
       // 系统 前端日志
       // 刷新页面 必须保留
       {
