@@ -223,7 +223,8 @@
                 :headers="uploadHeaders"
                 :show-file-list="false"
                 :on-success="handleUploadSuccess"
-                :before-upload="handleBeforeUpload"
+                :before-upload="beforeAvatarUpload"
+                :data="{token:token}"
               >
                 <img v-if="form.avatar" :src="form.avatar" class="avatar" />
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -398,7 +399,7 @@ export default {
       list: null,
       listLoading: true,
       selRow: {},
-      setTokens: ''
+      token: ''
     }
   },
   filters: {
@@ -439,7 +440,7 @@ export default {
     getToken().then((res) => {
       const { code, data } = res
       if (code === '0') {
-        this.setTokens = data
+        this.token = data
       }
     })
   },
@@ -583,8 +584,8 @@ export default {
           if (valid) {
             const form = self.form
             if (this.validPasswd()) {
-              form.birthday = parseTime(form.birthday, '{y}-{m}-{d}')
-              form.createtime = parseTime(form.createtime)
+              // form.birthday = parseTime(form.birthday, '{y}-{m}-{d}')
+              // form.createtime = parseTime(form.createtime)
               userAdd({
                 username: form.username,
                 password: form.password,
@@ -704,27 +705,25 @@ export default {
     /**
      * 上传文件前处理
      */
-    handleBeforeUpload () {
-      this.loadingInstance = Loading.service({
-        lock: true,
-        text: this.$t('common.uploading'),
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
     },
     /**
      * 上传成功
      */
-    handleUploadSuccess (response, raw) {
-      this.loadingInstance.close()
-      if (response.code === 200) {
-        this.form.avatar = response.data.url
-      } else {
-        this.$message({
-          message: this.$t('common.uploadError'),
-          type: 'error'
-        })
-      }
+    handleUploadSuccess (res) {
+      console.log(res)
+      const url = 'http://files.q.lidaokoi.com/' + res.key
+      console.log(url)
     }
   }
 }
