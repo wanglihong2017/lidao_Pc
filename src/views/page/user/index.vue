@@ -19,7 +19,7 @@
             icon="el-icon-search"
             @click.native="search"
           >
-           搜索
+            搜索
           </el-button>
           <el-button
             type="primary"
@@ -27,7 +27,7 @@
             icon="el-icon-refresh"
             @click.native="reset"
           >
-           重置
+            重置
           </el-button>
           <el-button
             v-permission="['*', 'account:create']"
@@ -129,8 +129,8 @@
           </el-table-column> -->
 
           <el-table-column label="角色">
-            <template  slot-scope="scope">
-              <span>{{scope.row.roleName}}</span>
+            <template slot-scope="scope">
+              <span>{{ scope.row.roleName }}</span>
             </template>
           </el-table-column>
 
@@ -158,7 +158,7 @@
                 icon="el-icon-edit"
                 @click.native="editItem(scope.row)"
               >
-               编辑
+                编辑
               </el-button>
               <el-button
                 v-permission="['*', 'account:delete']"
@@ -167,7 +167,7 @@
                 icon="el-icon-delete"
                 @click.native="removeItem(scope.row)"
               >
-               删除
+                删除
               </el-button>
               <!-- <el-button
                 v-permission="['*', 'role:update']"
@@ -224,7 +224,7 @@
                 :show-file-list="false"
                 :on-success="handleUploadSuccess"
                 :before-upload="beforeAvatarUpload"
-                :data="{token:token}"
+                :data="{ token: token }"
               >
                 <img v-if="form.avatar" :src="form.avatar" class="avatar" />
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -288,10 +288,9 @@
           </el-col>
         </el-row>
         <el-form-item>
-          <el-button type="primary" @click="userAdd">
-            {{$t('button.submit')}}</el-button>
-          <el-button @click.native="formVisible = false">
-            {{$t('button.cancel') }}
+          <el-button type="primary" @click="userAddBtns">确定</el-button
+          >
+          <el-button @click.native="formVisible = false">取消
           </el-button>
         </el-form-item>
       </el-form>
@@ -423,10 +422,9 @@ export default {
       let opts = []
       try {
         opts = this.roleTree.data.map((el) => {
-          console.log('el', el)
           return {
-            id: el.value,
-            label: el.label
+            id: el.id,
+            label: el.roleName
           }
         })
       } catch (err) {
@@ -562,7 +560,7 @@ export default {
     /**
      * 保存用户
      */
-    userAdd () {
+    userAddBtns () {
       var self = this
       if (this.form.account_id) {
         update({
@@ -721,22 +719,21 @@ export default {
      * 上传成功
      */
     handleUploadSuccess (res) {
-      console.log(res)
       const url = 'http://files.q.lidaokoi.com/' + res.key
-      console.log(url)
+      this.form.avatar = url
     }
   }
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.app-container{
+.app-container {
   margin: 10px 20px 10px;
 }
 .block {
   padding: 10px 0px;
 }
-.el-form-item{
-  margin-bottom:20px;
+.el-form-item {
+  margin-bottom: 20px;
 }
 .flash-table-expand {
   font-size: 0;
@@ -747,17 +744,17 @@ export default {
   margin-bottom: 0;
   width: 50%;
 }
-.user{
-  padding:10px;
+.user {
+  padding: 10px;
 }
 .user > strong {
   color: #777;
-  font-size:15px;
+  font-size: 15px;
   font-weight: 400;
 }
 
 .user > small {
-  color: #9E9E9E;
+  color: #9e9e9e;
 }
 
 .user-content {
@@ -771,8 +768,8 @@ export default {
   height: 500px;
   width: 220px;
 }
-.user-content>.profile>img{
-  width:100%;
+.user-content > .profile > img {
+  width: 100%;
 }
 .user-avatar {
   width: 80px;
@@ -798,6 +795,10 @@ export default {
   height: 100px;
   line-height: 100px;
   text-align: center;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 10px;
+  border: 1px dashed #d9d9d9;
 }
 .avatar {
   width: 100px;

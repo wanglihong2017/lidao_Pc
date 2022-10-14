@@ -11,7 +11,10 @@ import store from '@/store/index'
 import router from './router'
 import { menuHeader, menuAside } from '@/menu'
 import { frameInRoutes } from '@/router/routes'
-
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+Vue.component('treeselect', Treeselect)
+// Vue.component('treeselect', window.VueTreeselect.Treeselect)
 // 核心插件
 Vue.use(d2Admin)
 
