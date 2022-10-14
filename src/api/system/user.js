@@ -21,3 +21,16 @@ export function remove (params) {
     data: $qs.stringify(params)
   })
 }
+export function update (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manage_user/v1/managerUpdate',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}
+export function roleOpts (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manager_role/v1/getAllList?' + $qs.stringify(params),
+    method: 'get'
+  })
+}

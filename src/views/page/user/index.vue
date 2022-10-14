@@ -272,7 +272,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="是否启用" prop="enabled">
-              <el-switch v-model="form.enabled"></el-switch>
+              <el-switch v-model="form.enabled" :active-value="1"
+              :inactive-value="0"></el-switch>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -321,11 +322,10 @@
   </div>
 </template>
 <script>
-import { Loading } from 'element-ui'
-import { getList, userAdd, remove, setRole, update } from '@/api/system/user'
+// import { Loading } from 'element-ui'
+import { getList, userAdd, remove, update, roleOpts } from '@/api/system/user'
 import { parseTime } from '@/utils/index'
 import { getToken } from '@/api/api'
-import { roleTreeListByIdUser, roleOpts } from '@/api/system/role'
 // 权限判断指令
 export default {
   data () {
@@ -499,10 +499,8 @@ export default {
     resetForm () {
       this.form = {
         avatar: '',
-        id: '',
+        account_id: '',
         username: '',
-        birthday: '',
-        sex: 1,
         email: '',
         password: '',
         rePassword: '',
@@ -563,7 +561,7 @@ export default {
       var self = this
       if (this.form.account_id) {
         update({
-          // account_id: this.form.account_id,
+          id: this.form.account_id,
           userName: this.form.username,
           imgPath: this.form.avatar,
           manPwd: this.form.password,
@@ -615,9 +613,20 @@ export default {
       this.edit()
     },
     edit () {
+      console.log('this.selRow', this.selRow)
       this.isAdd = false
       this.form = this.selRow
-      this.form.roleid = this.selRow.roles[0]
+      this.form = {
+        avatar: this.selRow.imgPath,
+        account_id: this.selRow.id,
+        username: this.selRow.userName,
+        email: this.selRow.manEmail,
+        password: '',
+        rePassword: '',
+        roleid: this.selRow.manRoleId,
+        enabled: this.selRow.manIsEnable
+      }
+      this.form.roleid = this.selRow.manRoleId
       this.form.password = ''
       this.formTitle = '修改用户'
       this.formVisible = true
@@ -664,25 +673,25 @@ export default {
     //     this.roleDialog.visible = true
     //   })
     // },
-    setRole () {
-      var checkedRoleKeys = this.$refs.roleTree.getCheckedKeys()
-      var roleIds = ''
-      for (var index in checkedRoleKeys) {
-        roleIds += checkedRoleKeys[index] + ','
-      }
-      var data = {
-        userId: this.selRow.id,
-        roleIds: roleIds
-      }
-      setRole(data).then((response) => {
-        this.roleDialog.visible = false
-        this.fetchData()
-        this.$message({
-          message: '提交成功',
-          type: 'success'
-        })
-      })
-    },
+    // setRole () {
+    //   var checkedRoleKeys = this.$refs.roleTree.getCheckedKeys()
+    //   var roleIds = ''
+    //   for (var index in checkedRoleKeys) {
+    //     roleIds += checkedRoleKeys[index] + ','
+    //   }
+    //   var data = {
+    //     userId: this.selRow.id,
+    //     roleIds: roleIds
+    //   }
+    //   setRole(data).then((response) => {
+    //     this.roleDialog.visible = false
+    //     this.fetchData()
+    //     this.$message({
+    //       message: '提交成功',
+    //       type: 'success'
+    //     })
+    //   })
+    // },
     /**
      * 上传文件前处理
      */
