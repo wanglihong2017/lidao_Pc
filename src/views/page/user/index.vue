@@ -313,7 +313,7 @@
         </el-row>
         <el-form-item>
           <el-button type="primary" @click="setRole">{{
-            $t('button.submit')
+            提交
           }}</el-button>
         </el-form-item>
       </el-form>
@@ -323,7 +323,7 @@
 <script>
 import { Loading } from 'element-ui'
 import { getList, userAdd, remove, setRole, update } from '@/api/system/user'
-// import { parseTime } from '@/utils/index'
+import { parseTime } from '@/utils/index'
 import { getToken } from '@/api/api'
 import { roleTreeListByIdUser, roleOpts } from '@/api/system/role'
 // 权限判断指令
@@ -455,7 +455,6 @@ export default {
     fetchData () {
       this.listLoading = true
       getList(this.listQuery).then(({ data }) => {
-        console.log('1123', data)
         this.list = data.list
         this.total = data.total
         this.listLoading = false
@@ -564,11 +563,15 @@ export default {
       var self = this
       if (this.form.account_id) {
         update({
-          account_id: this.form.account_id,
-          username: this.form.username,
-          roles: [this.form.roleid],
+          // account_id: this.form.account_id,
+          userName: this.form.username,
+          imgPath: this.form.avatar,
+          manPwd: this.form.password,
+          manRoleId: this.form.roleid,
           avatar: this.form.avatar,
-          enabled: this.form.enabled
+          manIsEnable: this.form.enabled ? 1 : 0,
+          manEmail: this.form.email,
+          manBirthday: this.form.birthday
         }).then((response) => {
           this.$message({
             message: '提交成功',
@@ -582,14 +585,16 @@ export default {
           if (valid) {
             const form = self.form
             if (this.validPasswd()) {
-              // form.birthday = parseTime(form.birthday, '{y}-{m}-{d}')
-              // form.createtime = parseTime(form.createtime)
+              form.birthday = parseTime(form.birthday, '{y}-{m}-{d}')
+              form.createtime = parseTime(form.createtime)
               userAdd({
-                username: form.username,
-                password: form.password,
-                roles: [form.roleid || ''],
-                avatar: form.avatar,
-                enabled: form.enabled
+                userName: this.form.username,
+                imgPath: this.form.avatar,
+                manPwd: this.form.password,
+                manRoleId: this.form.roleid,
+                manIsEnable: this.form.enabled ? 1 : 0,
+                manEmail: this.form.email,
+                manBirthday: this.form.birthday
               }).then((response) => {
                 this.$message({
                   message: '提交成功',
@@ -605,60 +610,40 @@ export default {
         })
       }
     },
-    checkSel () {
-      if (this.selRow && this.selRow.account_id) {
-        return true
-      }
-      this.$message({
-        message: '请选中操作项',
-        type: 'warning'
-      })
-      return false
-    },
     editItem (record) {
       this.selRow = Object.assign({}, record)
       this.edit()
     },
     edit () {
-      if (this.checkSel()) {
-        this.isAdd = false
-        this.form = this.selRow
-        this.form.roleid = this.selRow.roles[0]
-        this.form.password = ''
-        this.formTitle = '修改用户'
-        this.formVisible = true
-      }
+      this.isAdd = false
+      this.form = this.selRow
+      this.form.roleid = this.selRow.roles[0]
+      this.form.password = ''
+      this.formTitle = '修改用户'
+      this.formVisible = true
     },
     removeItem (record) {
       this.selRow = record
-      this.remove()
-    },
-    remove () {
-      if (this.checkSel()) {
-        var id = this.selRow.account_id
-        this.$confirm('确定删除该记录?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then(() => {
-            remove(id)
-              .then((response) => {
-                this.$message({
-                  message: '删除成功',
-                  type: 'success'
-                })
-                this.fetchData()
-              })
-              .catch((err) => {
-                this.$notify.error({
-                  title: '错误',
-                  message: err
-                })
-              })
+      this.$confirm('确定删除该记录?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        remove({ id: record.id })
+          .then((response) => {
+            this.$message({
+              message: '删除成功',
+              type: 'success'
+            })
+            this.fetchData()
           })
-          .catch(() => {})
-      }
+          .catch((err) => {
+            this.$notify.error({
+              title: '错误',
+              message: err
+            })
+          })
+      })
     },
     /**
      * 筛选角色
@@ -672,15 +657,13 @@ export default {
       this.selRow = record
       this.openRole()
     },
-    openRole () {
-      if (this.checkSel()) {
-        roleTreeListByIdUser(this.selRow.id).then((response) => {
-          this.roleDialog.roles = response.data.treeData
-          this.roleDialog.checkedRoleKeys = response.data.checkedIds
-          this.roleDialog.visible = true
-        })
-      }
-    },
+    // openRole () {
+    //   roleTreeListByIdUser(this.selRow.id).then((response) => {
+    //     this.roleDialog.roles = response.data.treeData
+    //     this.roleDialog.checkedRoleKeys = response.data.checkedIds
+    //     this.roleDialog.visible = true
+    //   })
+    // },
     setRole () {
       var checkedRoleKeys = this.$refs.roleTree.getCheckedKeys()
       var roleIds = ''
