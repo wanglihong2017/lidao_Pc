@@ -34,3 +34,26 @@ export function roleOpts (params) {
     method: 'get'
   })
 }
+
+// 关键字管理小 keyword
+export function getKeywordList (params) {
+  return request({
+    url: baseUrl + '/luckyfish/keyword/v1/getList?' + $qs.stringify(params),
+    method: 'get'
+  })
+}
+// 关键字删除 luckyfish/keyword/v1/delete
+export function keyworDelete (params) {
+  return request({
+    url: baseUrl + '/luckyfish/keyword/v1/delete',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}
+export function keyworAdd (params) {
+  return request({
+    url: baseUrl + '/luckyfish/keyword/v1/add',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}

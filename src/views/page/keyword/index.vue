@@ -39,17 +39,17 @@
     >
       <el-table-column label="ID">
         <template slot-scope="scope">
-          {{ scope.row.keyword_id }}
+          {{ scope.row.id }}
         </template>
       </el-table-column>
       <el-table-column label="关键字">
         <template slot-scope="scope">
-          {{ scope.row.keyword }}
+          {{ scope.row.name }}
         </template>
       </el-table-column>
       <el-table-column label="发布日期">
         <template slot-scope="scope">
-          {{ scope.row.inserted_at }}
+          {{ scope.row.createAt }}
         </template>
       </el-table-column>
 
@@ -61,7 +61,7 @@
             icon="el-icon-edit"
             @click.native="editItem(scope.row)"
           >
-            {{ $t('button.edit') }}
+        编辑
           </el-button>
           <el-button
             type="text"
@@ -69,7 +69,7 @@
             icon="el-icon-delete"
             @click.native="removeItem(scope.row)"
           >
-            {{ $t('button.delete') }}
+           删除
           </el-button>
         </template>
       </el-table-column>
@@ -79,9 +79,9 @@
       background
       layout="total, sizes, prev, pager, next, jumper"
       :page-sizes="[10, 20, 50, 100, 500]"
-      :page-size="listQuery.limit"
+      :page-size="listQuery.pageSize"
       :total="total"
-      :current-page.sync="listQuery.page"
+      :current-page.sync="listQuery.pageNum"
       @size-change="changeSize"
       @current-change="fetchPage"
       @prev-click="fetchPrev"
@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import { remove, getList, save } from '@/api/system/user.js'
+import { keyworDelete, getKeywordList, keyworAdd } from '@/api/system/user.js'
 export default {
   name: 'keyword',
   data () {
@@ -128,11 +128,11 @@ export default {
         keyword_id: ''
       },
       listQuery: {
-        page: 1,
-        limit: 20,
-        title: undefined,
-        startDate: undefined,
-        endDate: undefined
+        pageNum: 1,
+        pageSize: 20,
+        title: '',
+        startDate: '',
+        endDate: ''
       },
       list: null,
       total: 0,
@@ -162,24 +162,24 @@ export default {
     },
     fetchData () {
       this.listLoading = true
-      getList(this.listQuery).then(({ data }) => {
-        this.list = data.entries
+      getKeywordList(this.listQuery).then(({ data }) => {
+        this.list = data.list
         this.total = data.total
         this.listLoading = false
       })
     },
     search () {
-      this.listQuery.page = 1
+      this.listQuery.pageNum = 1
       this.fetchData()
     },
     reset () {
       this.listQuery.name = ''
-      this.listQuery.page = 1
+      this.listQuery.pageNum = 1
       this.fetchData()
     },
-    handleFilter () {
-      this.getList()
-    },
+    // handleFilter () {
+    //   this.getKeywordList()
+    // },
     handleCurrentChange (currentRow, oldCurrentRow) {
       this.selRow = currentRow
     },
@@ -189,19 +189,19 @@ export default {
       }
     },
     fetchNext () {
-      this.listQuery.page = this.listQuery.page + 1
+      this.listQuery.pageNum = this.listQuery.pageNum + 1
       this.fetchData()
     },
     fetchPrev () {
-      this.listQuery.page = this.listQuery.page - 1
+      this.listQuery.pageNum = this.listQuery.pageNum - 1
       this.fetchData()
     },
-    fetchPage (page) {
-      this.listQuery.page = page
+    fetchPage (pageNum) {
+      this.listQuery.pageNum = pageNum
       this.fetchData()
     },
-    changeSize (limit) {
-      this.listQuery.limit = limit
+    changeSize (pageSize) {
+      this.listQuery.pageSize = pageSize
       this.fetchData()
     },
     add () {
@@ -213,24 +213,24 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           if (this.form.keyword_id) {
-            save({
-              keyword_id: this.form.keyword_id,
-              keyword: this.form.keyword
+            keyworAdd({
+              id: this.form.keyword_id,
+              name: this.form.keyword
             }).then(response => {
               this.$message({
-                message: this.$t('common.optionSuccess'),
+                message: '编辑成功',
                 type: 'success'
               })
               this.fetchData()
               this.formVisible = false
             })
           } else {
-            save({
+            keyworAdd({
               keyword_id: this.form.keyword_id || '',
-              keyword: this.form.keyword
+              name: this.form.keyword
             }).then(response => {
               this.$message({
-                message: this.$t('common.optionSuccess'),
+                message: '保存成功',
                 type: 'success'
               })
               this.fetchData()
@@ -242,40 +242,28 @@ export default {
         }
       })
     },
-    checkSel () {
-      if (this.selRow && this.selRow.keyword_id) {
-        return true
-      }
-      this.$message({
-        message: this.$t('common.mustSelectOne'),
-        type: 'warning'
-      })
-      return false
-    },
     removeItem (record) {
       this.selRow = record
       this.remove()
     },
     remove () {
-      if (this.checkSel()) {
-        // eslint-disable-next-line camelcase
-        const keyword_id = this.selRow.keyword_id
-        this.$confirm(this.$t('common.deleteConfirm'), this.$t('common.tooltip'), {
-          confirmButtonText: this.$t('button.submit'),
-          cancelButtonText: this.$t('button.cancel'),
-          type: 'warning'
-        })
-          .then(() => {
-            remove(keyword_id).then(response => {
-              this.$message({
-                message: this.$t('common.optionSuccess'),
-                type: 'success'
-              })
-              this.fetchData()
+      // eslint-disable-next-line camelcase
+      const keyword_id = this.selRow.id
+      this.$confirm('你确定删除该记录吗', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          keyworDelete({ id: keyword_id }).then(response => {
+            this.$message({
+              message: '删除成功',
+              type: 'success'
             })
+            this.fetchData()
           })
-          .catch(() => {})
-      }
+        })
+        .catch(() => {})
     },
 
     // this.$message({
@@ -284,14 +272,14 @@ export default {
     // })
     editItem (record) {
       this.selRow = Object.assign({}, record)
+      console.log('this.selRow', this.selRow)
       this.edit()
     },
     edit () {
-      if (this.checkSel()) {
-        this.form = this.selRow
-        this.formTitle = '修改搜索关键字'
-        this.formVisible = true
-      }
+      this.form.keyword = this.selRow.name
+      this.form.keyword_id = this.selRow.id
+      this.formTitle = '修改搜索关键字'
+      this.formVisible = true
     }
   }
 }
