@@ -3,17 +3,17 @@
     <div class="block">
       <el-row :gutter="20">
         <el-col :span="4">
-          <el-input v-model="listQuery.name" size="mini" placeholder="请输入角色名称"></el-input>
+          <el-input v-model="listQuery.searchText" size="mini" placeholder="请输入角色名称"></el-input>
         </el-col>
         <el-col :span="4">
-          <el-input v-model="listQuery.desc" size="mini" placeholder="请输入角色描述"></el-input>
+          <el-input v-model="listQuery.searchText" size="mini" placeholder="请输入角色描述"></el-input>
         </el-col>
         <el-col :span="16">
           <el-button type="primary" size="mini" icon="el-icon-search" @click.native="search">
-            {{ $t('button.search') }}
+            搜索
           </el-button>
           <el-button type="primary" size="mini" icon="el-icon-refresh" @click.native="reset">
-            {{ $t('button.reset') }}
+           重置
           </el-button>
         </el-col>
       </el-row>
@@ -26,7 +26,7 @@
             icon="el-icon-plus"
             @click.native="add"
           >
-            {{ $t('button.add') }}
+            添加
           </el-button>
           <!-- <el-button
             v-permission="['*', 'role:update']"
@@ -70,12 +70,12 @@
     >
       <el-table-column label="名称">
         <template slot-scope="scope">
-          {{ scope.row.name }}
+          {{ scope.row.roleName }}
         </template>
       </el-table-column>
       <el-table-column label="描述">
         <template slot-scope="scope">
-          {{ scope.row.desc }}
+          {{ scope.row.content }}
         </template>
       </el-table-column>
       <el-table-column label="操作">
@@ -86,7 +86,7 @@
             icon="el-icon-edit"
             @click.native="editItem(scope.row)"
           >
-            {{ $t('button.edit') }}
+            编辑
           </el-button>
           <el-button
             type="text"
@@ -94,7 +94,7 @@
             icon="el-icon-delete"
             @click.native="removeItem(scope.row)"
           >
-            {{ $t('button.delete') }}
+           删除
           </el-button>
           <el-button
             type="text"
@@ -139,8 +139,8 @@
           </el-col>
         </el-row>
         <el-form-item>
-          <el-button type="primary" @click="save">{{ $t('button.submit') }}</el-button>
-          <el-button @click.native="formVisible = false">{{ $t('button.cancel') }}</el-button>
+          <el-button type="primary" @click="save">确定</el-button>
+          <el-button @click.native="formVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -161,7 +161,7 @@
           </el-col>
         </el-row>
         <el-form-item>
-          <el-button type="primary" @click="savePermissions">{{ $t('button.submit') }}</el-button>
+          <el-button type="primary" @click="savePermissions">确定</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -180,7 +180,7 @@ export default {
         data: [],
         defaultProps: {
           id: 'id',
-          label: 'label',
+          label: 'funName',
           children: 'children'
         }
       },
@@ -203,9 +203,9 @@ export default {
         ]
       },
       listQuery: {
-        page: 1,
-        limit: 20,
-        name: undefined
+        pageNum: 1,
+        pageSize: 20,
+        searchText: ''
       },
       total: 0,
       list: null,
@@ -236,7 +236,7 @@ export default {
     fetchData () {
       this.listLoading = true
       getList(this.listQuery).then(({ data }) => {
-        this.list = data.entries
+        this.list = data.list
         this.total = data.total
         this.listLoading = false
       })
@@ -246,8 +246,8 @@ export default {
       this.fetchData()
     },
     reset () {
-      this.listQuery.name = ''
-      this.listQuery.page = 1
+      this.listQuery.searchText = ''
+      this.listQuery.pageNum = 1
       this.fetchData()
     },
     handleFilter () {
@@ -276,10 +276,7 @@ export default {
       this.form = {
         name: '',
         desc: '',
-        pid: 0,
-        id: '',
-        version: '',
-        deptName: ''
+        id: ''
       }
     },
     add () {
@@ -292,12 +289,12 @@ export default {
         if (valid) {
           if (this.form.role_id) {
             update({
-              role_id: this.form.role_id,
-              name: this.form.name,
-              desc: this.form.desc
+              id: this.form.role_id,
+              roleName: this.form.name,
+              content: this.form.desc
             }).then(response => {
               this.$message({
-                message: this.$t('common.optionSuccess'),
+                message: '编辑成功',
                 type: 'success'
               })
               this.fetchData()
@@ -305,11 +302,11 @@ export default {
             })
           } else {
             save({
-              name: this.form.name,
-              desc: this.form.desc
+              roleName: this.form.name,
+              content: this.form.desc
             }).then(response => {
               this.$message({
-                message: this.$t('common.optionSuccess'),
+                message: '保存成功',
                 type: 'success'
               })
               this.fetchData()
@@ -322,79 +319,72 @@ export default {
         }
       })
     },
-    checkSel () {
-      if (this.selRow && this.selRow.role_id) {
-        return true
-      }
-      this.$message({
-        message: '请选中操作项',
-        type: 'warning'
-      })
-      return false
-    },
     editItem (record) {
       this.selRow = Object.assign({}, record)
       this.edit()
     },
     edit () {
-      if (this.checkSel()) {
-        this.form = this.selRow
-        this.formTitle = '修改角色'
-        this.formVisible = true
+      console.log('this.selRow', this.selRow)
+      this.form = {
+        name: this.selRow.roleName,
+        desc: this.selRow.content,
+        role_id: this.selRow.id
       }
+      this.formTitle = '修改角色'
+      this.formVisible = true
     },
     removeItem (record) {
       this.selRow = record
       this.remove()
     },
     remove () {
-      if (this.checkSel()) {
-        const id = this.selRow.role_id
-        this.$confirm('确定删除该记录?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
+      const id = this.selRow.id
+      this.$confirm('确定删除该记录?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          remove({ id: id })
+            .then(response => {
+              this.$message({
+                message: '提交成功',
+                type: 'success'
+              })
+              this.fetchData()
+            })
+            .catch(err => {
+              this.$notify.error({
+                title: '错误',
+                message: err
+              })
+            })
         })
-          .then(() => {
-            remove(id)
-              .then(response => {
-                this.$message({
-                  message: '提交成功',
-                  type: 'success'
-                })
-                this.fetchData()
-              })
-              .catch(err => {
-                this.$notify.error({
-                  title: '错误',
-                  message: err
-                })
-              })
-          })
-          .catch(() => {})
-      }
+        .catch(() => {})
     },
     openPermissionsItem (record) {
       this.selRow = record
+      console.log('record', record)
       this.openPermissions()
     },
     openPermissions () {
-      if (this.checkSel()) {
-        this.permissonVisible = true
-        getRolePermission(this.selRow.role_id).then(({ data }) => {
-          const {
-            role: { permissions: parsePerms }
-          } = data
-          const list = []
-          let arr = []
-          if (parsePerms.indexOf('*') > -1) {
-            arr = list.map(el => el)
-          } else {
-            arr = list.filter(el => parsePerms.indexOf(el) > -1)
-          }
-          this.$refs.permissonTree.setCheckedKeys(arr)
-        })
-      }
+      this.permissonVisible = true
+      getRolePermission(this.selRow.role_id).then(({ data }) => {
+        console.log('data', data)
+        this.permissions.data = data
+        // const {
+        //   role: { permissions: parsePerms }
+        // } = data
+        // const list = []
+        const arr = data
+        // if (parsePerms.indexOf('*') > -1) {
+        //   arr = list.map(el => el)
+        // } else {
+        //   arr = list.filter(el => parsePerms.indexOf(el) > -1)
+        // }
+        console.log('arr', arr)
+        this.$refs.permissonTree.setCheckedKeys(arr)
+      })
     },
     savePermissions () {
       const checkedNodes = this.$refs.permissonTree.getCheckedNodes(true, false)
@@ -403,10 +393,9 @@ export default {
         perms.push(checkedNodes[index].id)
       }
       const data = {
-        role_id: this.selRow.role_id,
-        permissions: perms
+        roleId: this.selRow.id,
+        funIds: perms.toString()
       }
-      console.log(data)
       updateRolePerms(data).then(response => {
         this.permissonVisible = false
         this.$message({
