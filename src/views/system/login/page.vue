@@ -23,7 +23,7 @@
           class="page-login--content-main"
           flex="dir:top main:center cross:center">
           <!-- logo -->
-          <img class="page-login--logo" src="./image/logo@2x.png">
+          <img class="page-login--logo" src="https://files.q.lidaokoi.com/imgs/logo.jpeg">
           <!-- form -->
           <div class="page-login--form">
             <el-card shadow="never">
@@ -49,7 +49,7 @@
                     <i slot="prepend" class="fa fa-keyboard-o"></i>
                   </el-input>
                 </el-form-item>
-                <el-form-item prop="code">
+                <!-- <el-form-item prop="code">
                   <el-input
                     type="text"
                     v-model="formLogin.code"
@@ -58,7 +58,7 @@
                       <img class="login-code" src="./image/login-code.png">
                     </template>
                   </el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-button
                   size="default"
                   @click="submit"
@@ -68,16 +68,16 @@
                 </el-button>
               </el-form>
             </el-card>
-            <p
+            <!-- <p
               class="page-login--options"
               flex="main:justify cross:center">
               <span><d2-icon name="question-circle"/> 忘记密码</span>
               <span>注册用户</span>
-            </p>
+            </p> -->
             <!-- quick login -->
-            <el-button class="page-login--quick" size="default" type="info" @click="dialogVisible = true">
+            <!-- <el-button class="page-login--quick" size="default" type="info" @click="dialogVisible = true">
               快速选择用户（测试功能）
-            </el-button>
+            </el-button> -->
           </div>
         </div>
         <div class="page-login--content-footer">

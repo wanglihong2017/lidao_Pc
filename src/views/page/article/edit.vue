@@ -95,6 +95,7 @@
                   :default-text="defaultText"
                   :rich-text.sync="richText"
                   @update:rich-text="updateRichText"
+                   @upload:img="uploadImg"
                 />
               </el-form-item>
             </el-col>
@@ -234,9 +235,10 @@ export default {
     /**
      * 富文本编辑器上传图片
      */
-    // async uploadImg ({ resultFiles, insertImgFn }) {
-    //   console.log('resultFiles', resultFiles[0].name)
-    // },
+    async uploadImg ({ resultFiles, insertImgFn }) {
+      this.form.content = 'resultFiles[0].name'
+      console.log('resultFiles', resultFiles[0].name)
+    },
 
     /**
      * 上传文件前处理
