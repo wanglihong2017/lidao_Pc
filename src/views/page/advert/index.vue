@@ -66,11 +66,11 @@
       <el-table-column label="状态" width="180">
         <template slot-scope="scope">
           <el-switch
+            @change="setState(scope.row)"
             v-model="scope.row.isDelete"
             :active-value="1"
             :inactive-value="0"
             active-text="开启"
-            disabled
             inactive-text="关闭"
           >
           </el-switch>
@@ -358,7 +358,7 @@
 </template>
 
 <script>
-import { remove, getList, save, update } from '@/api/system/advert'
+import { remove, getList, save, update, updateDelete } from '@/api/system/advert'
 import { getToken } from '@/api/api'
 import { Loading } from 'element-ui'
 import util from '@/libs/util'
@@ -459,6 +459,16 @@ export default {
       this.listQuery.pageNum = 1
       this.fetchData()
     },
+    setState (item) {
+      console.log('123', item)
+      const param = {
+        id: item.id,
+        isDelete: item.isDelete
+      }
+      updateDelete(param).then((res) => {
+        console.log(res)
+      })
+    },
     reset () {
       this.listQuery.position = ''
       this.listQuery.title = ''
@@ -549,14 +559,14 @@ export default {
       this.remove()
     },
     remove () {
-      const userId = this.selRow.userId
-      this.$confirm(this.$t('common.deleteConfirm'), this.$t('common.tooltip'), {
-        confirmButtonText: this.$t('button.submit'),
-        cancelButtonText: this.$t('button.cancel'),
+      const userId = this.selRow.id
+      this.$confirm('确定要删除吗', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          remove(userId).then(response => {
+          remove({ id: userId }).then(response => {
             this.$message({
               message: this.$t('common.optionSuccess'),
               type: 'success'

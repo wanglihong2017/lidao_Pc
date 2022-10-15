@@ -21,3 +21,17 @@ export function update (params) {
     data: $qs.stringify(params)
   })
 }
+export function remove (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manager_ad/v1/deleteAd',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}
+export function updateDelete (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manager_ad/v1/updateDelete',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}
