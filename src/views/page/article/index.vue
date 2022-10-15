@@ -99,7 +99,7 @@
       </el-table-column>
        <el-table-column label="内容">
         <template slot-scope="scope">
-          {{ scope.row.content }}
+          <p v-html="scope.row.content"></p>
         </template>
       </el-table-column>
       <el-table-column label="更新/发布日期">

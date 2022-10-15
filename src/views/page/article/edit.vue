@@ -4,7 +4,7 @@
     <div class="block">
       <el-form ref="form" :model="form" :rules="rules">
         <el-row>
-          <el-form-item label="封面图" prop="pic_url">
+          <el-form-item label="上传图片" prop="imgPath">
             <el-row>
               <el-col :span="8">
                 <el-upload
@@ -17,7 +17,7 @@
                   :on-success="handleUploadSuccess"
                   :data="{ token: token }"
                 >
-                  <img v-if="form.pic_url" :src="form.pic_url" class="img" />
+                  <img v-if="form.imgPath" :src="form.imgPath" class="img" />
                   <template v-else>
                     <i class="el-icon-plus"></i>
                     <div class="el-upload__text">上传图片</div>
@@ -32,26 +32,13 @@
         </el-row>
         <el-row>
           <el-col :span="18">
-            <el-form-item label="推荐文章" prop="related_list">
-              <el-select
-                v-model="form.related_list_key"
-                multiple
-                filterable
-                remote
-                reserve-keyword
-                placeholder="请输入推荐文章关键词"
-                :remote-method="remoteMethod"
-                :loading="relatedListLoading"
-                style="width: 75%;"
-              >
-                <el-option
-                  v-for="item in relatedListOpts"
-                  :key="item.article_id"
-                  :label="item.title"
-                  :value="item.article_id"
-                >
-                </el-option>
-              </el-select>
+            <el-form-item label="文章类型" prop="articleType">
+               <el-radio-group v-model="form.articleType">
+                <el-radio :label="3">拍卖资讯</el-radio>
+                <el-radio :label="4">鲤道头条</el-radio>
+                <el-radio :label="5">答鱼友问</el-radio>
+                <el-radio :label="6">鲤道课堂</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
@@ -64,18 +51,18 @@
         </el-row>
         <el-row>
           <el-col :span="18">
-            <el-form-item label="选择栏目" prop="category_id">
-              <el-select v-model="form.category_id" placeholder="选择栏目" style="width: 100%;">
-                <el-option v-for="item in categoryOpts" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
+            <el-form-item label="图片类型" prop="imgType">
+                 <el-radio-group v-model="form.imgType">
+                    <el-radio :label="1">图片</el-radio>
+                    <el-radio :label="2">视频</el-radio>
+                </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="展示类型" prop="type">
-              <el-radio-group v-model="form.type" @change="choiceDisplayType">
+            <el-form-item label="展示类型" prop="billType">
+              <el-radio-group v-model="form.billType" @change="choiceDisplayType">
                 <el-radio
                   v-for="(item, index) in [{ value: 1, label: '图文展示' }, { value: 2, label: '流媒体展示' }]"
                   :key="index"
@@ -87,24 +74,27 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="文章状态" prop="status">
-              <el-radio-group v-model="form.status">
-                <el-radio label="draft">草稿</el-radio>
-                <el-radio label="publish">发布</el-radio>
-              </el-radio-group>
+            <el-form-item label="文章状态" prop="isDelete">
+              <el-switch
+                v-model="form.isDelete"
+                :active-value='0'
+                :inactive-value='1'
+                 active-text="开启"
+                 inactive-text="关闭"
+                >
+                </el-switch>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row>
           <transition name="fade" mode="out-in">
-            <el-col v-if="form.type === 1" :span="18">
+            <el-col v-if="form.billType === 1" :span="18">
               <el-form-item label="图文信息" prop="content">
                 <WangEditor
                   :default-text="defaultText"
                   :rich-text.sync="richText"
                   @update:rich-text="updateRichText"
-                  @upload:img="uploadImg"
                 />
               </el-form-item>
             </el-col>
@@ -118,17 +108,17 @@
       </el-form>
     </div>
 
-    <el-button class="article-submit" icon="el-icon-plus" size="medium" type="primary" @click="save">提交</el-button>
+    <el-button class="article-submit" icon="el-icon-plus" size="medium" type="primary" @click="saveBtns">提交</el-button>
   </div>
 </template>
 
 <script>
-import { Loading } from 'element-ui'
-import { save, get, searchRelated, getList } from '@/api/system/article'
+// import { Loading } from 'element-ui'
+import { addOt } from '@/api/system/article'
 import { getToken } from '@/api/api'
 import WangEditor from '@/components/WangEditor'
 import util from '@/libs/util'
-import { uploadImages } from '@/utils'
+// import { uploadImages } from '@/utils'
 
 export default {
   name: 'ArticleEdit',
@@ -145,17 +135,16 @@ export default {
         // Authorization: getToken()
       },
       loadingInstance: {},
-      article_id: '',
       token: '',
       form: {
+        userId: '',
         title: '',
-        related_list: [], // 相关推荐文章
-        related_list_key: [], // 相关推荐文章ID
-        category_id: undefined, // 类目ID
+        articleType: 3,
+        imgType: 1,
         content: '',
-        pic_url: '',
-        type: 1, // 文章类型 1:图文 2:视频
-        status: 'draft' // 文章状态 draft:草稿 publish:发布
+        imgPath: '',
+        billType: 1, // 文章展示
+        isDelete: 0 //
       },
       relatedListLoading: false, // 推荐文章loading
       relatedListOpts: [], // 推荐文章
@@ -163,11 +152,11 @@ export default {
 
       rules: {
         title: [{ required: true, message: '请选择文章标题', trigger: 'blur' }],
-        // pic_url: [{ required: true, message: '请上传广告图片', trigger: 'blur' }],
-        type: [{ required: true, message: '请选择文章类型', trigger: 'blur' }],
-        category_id: [{ required: true, message: '请选择文章栏目', trigger: 'blur' }],
+        imgPath: [{ required: true, message: '请上传图片', trigger: 'blur' }],
+        articleType: [{ required: true, message: '请选择文章类型', trigger: 'blur' }],
+        imgType: [{ required: true, message: '请选择图片类型', trigger: 'blur' }],
         content: [{ required: true, message: '内容/链接不能为空', trigger: 'blur' }],
-        status: [{ required: true, message: '请选择文章状态', trigger: 'blur' }]
+        isDelete: [{ required: true, message: '请选择文章状态', trigger: 'blur' }]
         // email: [{ required: true, message: '请输入email', trigger: 'blur' }]
       }
     }
@@ -185,14 +174,14 @@ export default {
     })
     const uuid = util.cookies.get('uuid')
     if (uuid) {
-      this.userId = uuid
+      this.form.userId = uuid
     }
   },
   deactivated () {},
   destroyed () {},
   watch: {
     richText (newVal) {
-      if (this.form.type === 1) {
+      if (this.form.billType === 1) {
         this.form.content = newVal
       }
     }
@@ -205,44 +194,12 @@ export default {
      * 初始化数据
      */
     async inititalData () {
-      this.article_id = this.$route.query.article_id || ''
-      if (!this.article_id) {
-        const { data: categoryOpts } = await getList()
-        this.categoryOpts = categoryOpts.category_options
-        return
-      }
-      try {
-        const {
-          data: { article }
-        } = await get(this.article_id)
-        const { data: categoryOpts } = await getList()
-        this.categoryOpts = categoryOpts.category_options
-        this.relatedListOpts = JSON.parse(JSON.stringify(article.related_list))
-        article.related_list_key = article.related_list.map(el => el.article_id)
-        this.form = article
-        // 等待组件加载完毕赋值
-        this.$nextTick(() => {
-          this.defaultText = this.form.content
-        })
-      } catch (error) {
-        console.log(error)
-      }
+
     },
-    save () {
+    saveBtns () {
       this.$refs.form.validate(valid => {
         if (valid) {
-          // const content = this.form.type === 1 ? this.richText : this.form.content
-          const article_id = this.$route.query.article_id || ''
-          save({
-            article_id,
-            title: this.form.title,
-            related_list: this.form.related_list_key,
-            category_id: this.form.category_id,
-            content: this.form.content,
-            pic_url: this.form.pic_url || '',
-            type: this.form.type,
-            status: this.form.status
-          }).then(response => {
+          addOt(this.form).then(response => {
             this.$message({
               message: this.$t('common.optionSuccess'),
               type: 'success'
@@ -277,10 +234,9 @@ export default {
     /**
      * 富文本编辑器上传图片
      */
-    async uploadImg ({ resultFiles, insertImgFn }) {
-      console.log('resultFiles', resultFiles[0].name)
-      this.handleUploadSuccess({ key: resultFiles[0].name })
-    },
+    // async uploadImg ({ resultFiles, insertImgFn }) {
+    //   console.log('resultFiles', resultFiles[0].name)
+    // },
 
     /**
      * 上传文件前处理
@@ -303,31 +259,13 @@ export default {
     handleUploadSuccess (res) {
       const url = 'http://files.q.lidaokoi.com/' + res.key
       console.log('url', url)
-    //   this.form.imgPath = url
+      this.form.imgPath = url
     },
     /**
      * 删除上传的图片
      */
     delUploaderPic () {
-      this.form.pic_url = ''
-    },
-    /**
-     * 搜索推荐文章
-     */
-    async remoteMethod (query) {
-      if (query !== '') {
-        this.relatedListLoading = true
-        try {
-          const { data } = await searchRelated({ keyword: query, page_size: 9999 })
-          console.log(this.form.related_list)
-          this.relatedListOpts = JSON.parse(JSON.stringify(this.form.related_list)).concat(data.entries)
-        } catch (error) {
-          console.log(error)
-        }
-        this.relatedListLoading = false
-      } else {
-        this.relatedListOpts = []
-      }
+      this.form.imgPath = ''
     }
   }
 }
