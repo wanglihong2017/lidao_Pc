@@ -19,9 +19,11 @@ export const menuHeader = supplementPath([
   { path: '/index', title: '首页', icon: 'home' },
   { path: '/comment', title: '评论管理', icon: 'folder-o' },
   { path: '/invitation', title: '帖子管理', icon: 'folder-o' },
+  { path: '/fishFriends', title: '鱼友管理', icon: 'folder-o' },
+  { path: '/advert', title: '广告管理', icon: 'folder-o' },
+  { path: '/article', title: '咨询发布', icon: 'folder-o' },
   { path: '/keyword', title: '关键字管理', icon: 'folder-o' },
   { path: '/role', title: '角色管理', icon: 'folder-o' },
-  { path: '/fishFriends', title: '鱼友圈管理', icon: 'folder-o' },
   // {
   //   title: '评论',
   //   icon: 'folder-o',
@@ -36,8 +38,10 @@ export const menuAside = supplementPath([
   { path: '/index', title: '首页', icon: 'home' },
   { path: '/comment', title: '评论管理', icon: 'folder-o' },
   { path: '/invitation', title: '帖子管理', icon: 'folder-o' },
+  { path: '/fishFriends', title: '鱼友管理', icon: 'folder-o' },
+  { path: '/advert', title: '广告管理', icon: 'folder-o' },
+  { path: '/article', title: '咨询发布', icon: 'folder-o' },
   { path: '/keyword', title: '关键字管理', icon: 'folder-o' },
-  { path: '/fishFriends', title: '鱼友圈管理', icon: 'folder-o' },
-  { path: '/role', title: '角色管理', icon: 'folder-o' },
-  { path: '/user', title: '用户管理', icon: 'home' }
+  { path: '/user', title: '用户管理', icon: 'home' },
+  { path: '/role', title: '角色管理', icon: 'folder-o' }
 ])

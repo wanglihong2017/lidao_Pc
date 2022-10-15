@@ -61,10 +61,28 @@ const frameIn = [
         path: 'fishFriends',
         name: 'fishFriends',
         meta: {
-          title: '鱼友圈管理',
+          title: '鱼友管理',
           auth: true
         },
         component: _import('page/fishFriends')
+      },
+      {
+        path: 'advert',
+        name: 'advert',
+        meta: {
+          title: '广告管理',
+          auth: true
+        },
+        component: _import('page/advert')
+      },
+      {
+        path: 'article',
+        name: 'article',
+        meta: {
+          title: '咨询发布',
+          auth: true
+        },
+        component: _import('page/article')
       },
       {
         path: 'role',
