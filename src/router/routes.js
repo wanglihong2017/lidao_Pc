@@ -66,6 +66,15 @@ const frameIn = [
         },
         component: _import('page/fishFriends')
       },
+      {
+        path: 'role',
+        name: 'role',
+        meta: {
+          title: '角色管理',
+          auth: true
+        },
+        component: _import('page/role')
+      },
       // 系统 前端日志
       // 刷新页面 必须保留
       {
