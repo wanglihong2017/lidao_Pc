@@ -116,8 +116,8 @@
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.isDelete"
-            :active-value="1"
-            :inactive-value="0"
+            :active-value="0"
+            :inactive-value="1"
             active-text="开启"
             inactive-text="关闭"
             @change="switchType(scope.row)"
@@ -140,13 +140,12 @@
         <template slot-scope="scope">
           <div>
             <el-button
-              v-if="scope.row.channel === 2"
               type="text"
               size="mini"
               icon="el-icon-edit"
               @click.native="editItem(scope.row)"
             >
-              {{ $t('button.edit') }}
+             编辑
             </el-button>
           </div>
           <div>
@@ -308,31 +307,17 @@ export default {
     add () {
       this.$router.push({ path: '/article/edit' })
     },
-    checkSel () {
-      if (this.selRow && this.selRow.article_id) {
-        return true
-      }
-      this.$message({
-        message: this.$t('common.mustSelectOne'),
-        type: 'warning'
-      })
-      return false
-    },
     /**
      * 草稿/发布 开关
      */
     switchType (record) {
       save({
-        title: record.title,
-        category_id: record.category_id,
-        pic_url: record.pic_url,
-        type: record.type,
-        article_id: record.article_id,
-        status: record.status
+        id: record.id,
+        isDelete: record.isDelete
       })
         .then(response => {
           this.$message({
-            message: this.$t('common.optionSuccess'),
+            message: '编辑成功',
             type: 'success'
           })
           this.fetchData()
@@ -346,39 +331,35 @@ export default {
       this.edit()
     },
     edit () {
-      if (this.checkSel()) {
-        this.$router.push({
-          path: '/article/edit',
-          query: {
-            article_id: this.selRow.article_id
-          }
-        })
-      }
+      this.$router.push({
+        path: '/article/edit',
+        query: {
+          article_id: this.selRow.article_id
+        }
+      })
     },
     removeItem (record) {
+      console.log('record', record)
       this.selRow = record
       this.remove()
     },
     remove () {
-      if (this.checkSel()) {
-        const id = this.selRow.article_id
-
-        this.$confirm(this.$t('common.deleteConfirm'), this.$t('common.tooltip'), {
-          confirmButtonText: this.$t('button.submit'),
-          cancelButtonText: this.$t('button.cancel'),
-          type: 'warning'
-        })
-          .then(() => {
-            remove(id).then(response => {
-              this.$message({
-                message: this.$t('common.optionSuccess'),
-                type: 'success'
-              })
-              this.fetchData()
+      const id = this.selRow.id
+      this.$confirm('你确定要删除吗', '温馨提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(() => {
+          remove({ id: id }).then(response => {
+            this.$message({
+              message: '删除成功',
+              type: 'success'
             })
+            this.fetchData()
           })
-          .catch(() => {})
-      }
+        })
+        .catch(() => {})
     }
   }
 }

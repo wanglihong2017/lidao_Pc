@@ -14,3 +14,17 @@ export function addOt (params) {
     data: $qs.stringify(params)
   })
 }
+export function remove (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manager_ad/v1/deleteOt',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}
+export function save (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manager_ad/v1/updateDelete',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}
