@@ -52,10 +52,19 @@ const frameIn = [
         path: 'keyword',
         name: 'keyword',
         meta: {
-          title: '帖子管理',
+          title: '关键字管理',
           auth: true
         },
         component: _import('page/keyword')
+      },
+      {
+        path: 'fishFriends',
+        name: 'fishFriends',
+        meta: {
+          title: '鱼友圈管理',
+          auth: true
+        },
+        component: _import('page/fishFriends')
       },
       // 系统 前端日志
       // 刷新页面 必须保留

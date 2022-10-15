@@ -20,6 +20,7 @@ export const menuHeader = supplementPath([
   { path: '/comment', title: '评论管理', icon: 'folder-o' },
   { path: '/invitation', title: '帖子管理', icon: 'folder-o' },
   { path: '/keyword', title: '关键字管理', icon: 'folder-o' },
+  { path: '/fishFriends', title: '鱼友圈管理', icon: 'folder-o' },
   // {
   //   title: '评论',
   //   icon: 'folder-o',
@@ -35,5 +36,6 @@ export const menuAside = supplementPath([
   { path: '/comment', title: '评论管理', icon: 'folder-o' },
   { path: '/invitation', title: '帖子管理', icon: 'folder-o' },
   { path: '/keyword', title: '关键字管理', icon: 'folder-o' },
+  { path: '/fishFriends', title: '鱼友圈管理', icon: 'folder-o' },
   { path: '/user', title: '用户管理', icon: 'home' }
 ])

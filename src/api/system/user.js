@@ -50,9 +50,24 @@ export function keyworDelete (params) {
     data: $qs.stringify(params)
   })
 }
+// 关键字添加 luckyfish/keyword/v1/delete
 export function keyworAdd (params) {
   return request({
     url: baseUrl + '/luckyfish/keyword/v1/add',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}
+// 鱼友圈管理
+export function fishFriendsList (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manage_user/v1/getList?' + $qs.stringify(params),
+    method: 'get'
+  })
+}
+export function updateType (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manage_user/v1/updateType',
     method: 'post',
     data: $qs.stringify(params)
   })

@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import { keyworDelete, getKeywordList, keyworAdd } from '@/api/system/user.js'
+import { keyworDelete, fishFriendsList, keyworAdd } from '@/api/system/user.js'
 export default {
   name: 'keyword',
   data () {
@@ -159,7 +159,7 @@ export default {
     },
     fetchData () {
       this.listLoading = true
-      getKeywordList(this.listQuery).then(({ data }) => {
+      fishFriendsList(this.listQuery).then(({ data }) => {
         this.list = data.list
         this.total = data.total
         this.listLoading = false
