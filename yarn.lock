@@ -764,10 +764,18 @@
     "core-js" "^2.6.12"
     "regenerator-runtime" "^0.13.4"
 
-"@babel/runtime@^7.3.1", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
-  "integrity" "sha512-64AF1xY3OAkFHqOb9s4jpgk1Mm5vDZ4L3acHvAml+53nO1XbXLuDodsVpO4OIUsmemlUHMxNdYMNJmsvOwLrvQ=="
-  "resolved" "https://registry.npmjs.org/@babel/runtime/-/runtime-7.9.6.tgz"
-  "version" "7.9.6"
+"@babel/runtime-corejs3@^7.11.2":
+  "integrity" "sha512-HzjQ8+dzdx7dmZy4DQ8KV8aHi/74AjEbBGTFutBmg/pd3dY5/q1sfuOGPTFGEytlQhWoeVXqcK5BwMgIkRkNDQ=="
+  "resolved" "https://registry.npmjs.org/@babel/runtime-corejs3/-/runtime-corejs3-7.19.4.tgz"
+  "version" "7.19.4"
+  dependencies:
+    "core-js-pure" "^3.25.1"
+    "regenerator-runtime" "^0.13.4"
+
+"@babel/runtime@^7.11.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.8.4", "@babel/runtime@^7.9.2":
+  "integrity" "sha512-EXpLCrk55f+cYqmHsSR+yD/0gAIMxxA9QK9lnQWzhMCvt+YmoBN7Zx94s++Kv0+unHk39vxNO8t+CMA2WSS3wA=="
+  "resolved" "https://registry.npmjs.org/@babel/runtime/-/runtime-7.19.4.tgz"
+  "version" "7.19.4"
   dependencies:
     "regenerator-runtime" "^0.13.4"
 
@@ -3155,6 +3163,11 @@
   dependencies:
     "browserslist" "^4.8.5"
     "semver" "7.0.0"
+
+"core-js-pure@^3.25.1":
+  "integrity" "sha512-oml3M22pHM+igfWHDfdLVq2ShWmjM2V4L+dQEBs0DWVIqEm9WHCwGAlZ6BmyBQGy5sFrJmcx+856D9lVKyGWYg=="
+  "resolved" "https://registry.npmjs.org/core-js-pure/-/core-js-pure-3.25.5.tgz"
+  "version" "3.25.5"
 
 "core-js@^2.4.0":
   "integrity" "sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg=="
@@ -10420,6 +10433,11 @@
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-1.11.2.tgz"
   "version" "1.11.2"
 
+"tslib@^2.1.0":
+  "integrity" "sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ=="
+  "resolved" "https://registry.npmjs.org/tslib/-/tslib-2.4.0.tgz"
+  "version" "2.4.0"
+
 "tty-browserify@0.0.0":
   "integrity" "sha1-oVe6QC2iTpv5V/mqadUk7tQpAaY="
   "resolved" "https://registry.npm.taobao.org/tty-browserify/download/tty-browserify-0.0.0.tgz"
@@ -10851,6 +10869,15 @@
   "version" "1.0.7"
   dependencies:
     "makeerror" "1.0.x"
+
+"wangeditor@^4.7.15":
+  "integrity" "sha512-aPTdREd8BxXVyJ5MI+LU83FQ7u1EPd341iXIorRNYSOvoimNoZ4nPg+yn3FGbB93/owEa6buLw8wdhYnMCJQLg=="
+  "resolved" "https://registry.npmjs.org/wangeditor/-/wangeditor-4.7.15.tgz"
+  "version" "4.7.15"
+  dependencies:
+    "@babel/runtime" "^7.11.2"
+    "@babel/runtime-corejs3" "^7.11.2"
+    "tslib" "^2.1.0"
 
 "watch-size@^2.0.0":
   "integrity" "sha512-M92R89dNoTPWyCD+HuUEDdhaDnh9jxPGOwlDc0u51jAgmjUvzqaEMynXSr3BaWs+QdHYk4KzibPy1TFtjLmOZQ=="

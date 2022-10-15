@@ -85,6 +85,15 @@ const frameIn = [
         component: _import('page/article')
       },
       {
+        path: 'article/edit',
+        name: 'article/edit',
+        meta: {
+          title: '咨询发布',
+          auth: true
+        },
+        component: _import('page/article/edit')
+      },
+      {
         path: 'role',
         name: 'role',
         meta: {
