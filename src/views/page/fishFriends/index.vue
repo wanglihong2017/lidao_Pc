@@ -63,14 +63,6 @@
           >
         编辑
           </el-button>
-          <el-button
-            type="text"
-            size="mini"
-            icon="el-icon-delete"
-            @click.native="removeItem(scope.row)"
-          >
-           删除
-          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -116,7 +108,7 @@
 </template>
 
 <script>
-import { keyworDelete, fishFriendsList, keyworAdd } from '@/api/system/user.js'
+import { fishFriendsList, fishFriendsupdateType } from '@/api/system/user.js'
 export default {
   name: 'keyword',
   data () {
@@ -210,7 +202,7 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           if (this.form.keyword_id) {
-            keyworAdd({
+            fishFriendsupdateType({
               id: this.form.keyword_id,
               name: this.form.keyword
             }).then(response => {
@@ -222,7 +214,7 @@ export default {
               this.formVisible = false
             })
           } else {
-            keyworAdd({
+            fishFriendsupdateType({
               keyword_id: this.form.keyword_id || '',
               name: this.form.keyword
             }).then(response => {
@@ -239,30 +231,6 @@ export default {
         }
       })
     },
-    removeItem (record) {
-      this.selRow = record
-      this.remove()
-    },
-    remove () {
-      // eslint-disable-next-line camelcase
-      const keyword_id = this.selRow.id
-      this.$confirm('你确定删除该记录吗', '温馨提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          keyworDelete({ id: keyword_id }).then(response => {
-            this.$message({
-              message: '删除成功',
-              type: 'success'
-            })
-            this.fetchData()
-          })
-        })
-        .catch(() => {})
-    },
-
     // this.$message({
     //   message: this.$t('common.optionSuccess'),
     //   type: 'success'

@@ -65,7 +65,7 @@ export function fishFriendsList (params) {
     method: 'get'
   })
 }
-export function updateType (params) {
+export function fishFriendsupdateType (params) {
   return request({
     url: baseUrl + '/luckyfish/manage_user/v1/updateType',
     method: 'post',
