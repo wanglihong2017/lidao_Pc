@@ -7,3 +7,10 @@ export function getList (params) {
     method: 'get'
   })
 }
+export function addOt (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manager_ot/v1/addOt',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}

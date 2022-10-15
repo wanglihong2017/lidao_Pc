@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button icon="el-icon-back" size="mini" @click.native="goBack">{{ $t('button.back') }}</el-button>
+    <el-button icon="el-icon-back" size="mini" @click.native="goBack">返回</el-button>
     <div class="block">
       <el-form ref="form" :model="form" :rules="rules">
         <el-row>
@@ -13,8 +13,9 @@
                   :action="uploadUrl"
                   :headers="uploadHeaders"
                   :show-file-list="false"
+                  :before-upload="beforeAvatarUpload"
                   :on-success="handleUploadSuccess"
-                  :before-upload="handleBeforeUpload"
+                  :data="{ token: token }"
                 >
                   <img v-if="form.pic_url" :src="form.pic_url" class="img" />
                   <template v-else>
@@ -117,16 +118,16 @@
       </el-form>
     </div>
 
-    <el-button class="article-submit" icon="el-icon-plus" size="medium" type="primary" @click="save">{{
-      $t('button.submit')
-    }}</el-button>
+    <el-button class="article-submit" icon="el-icon-plus" size="medium" type="primary" @click="save">提交</el-button>
   </div>
 </template>
 
 <script>
 import { Loading } from 'element-ui'
 import { save, get, searchRelated, getList } from '@/api/system/article'
+import { getToken } from '@/api/api'
 import WangEditor from '@/components/WangEditor'
+import util from '@/libs/util'
 import { uploadImages } from '@/utils'
 
 export default {
@@ -145,6 +146,7 @@ export default {
       },
       loadingInstance: {},
       article_id: '',
+      token: '',
       form: {
         title: '',
         related_list: [], // 相关推荐文章
@@ -174,7 +176,18 @@ export default {
     this.inititalData()
   },
   activated () {},
-  created () {},
+  created () {
+    getToken().then((res) => {
+      const { code, data } = res
+      if (code === '0') {
+        this.token = data
+      }
+    })
+    const uuid = util.cookies.get('uuid')
+    if (uuid) {
+      this.userId = uuid
+    }
+  },
   deactivated () {},
   destroyed () {},
   watch: {
@@ -185,6 +198,9 @@ export default {
     }
   },
   methods: {
+    goBack () {
+      this.$router.go(-1)
+    },
     /**
      * 初始化数据
      */
@@ -262,44 +278,32 @@ export default {
      * 富文本编辑器上传图片
      */
     async uploadImg ({ resultFiles, insertImgFn }) {
-      this.handleBeforeUpload()
-      try {
-        const r = await uploadImages(resultFiles[0], this.uploadUrl, this.uploadHeaders)
-        insertImgFn(r.url)
-      } catch (error) {
-        console.log(error)
-        this.$message({
-          message: this.$t('common.uploadError'),
-          type: 'error'
-        })
-      }
-      this.loadingInstance.close()
+      console.log('resultFiles', resultFiles[0].name)
+      this.handleUploadSuccess({ key: resultFiles[0].name })
     },
 
     /**
      * 上传文件前处理
      */
-    handleBeforeUpload () {
-      this.loadingInstance = Loading.service({
-        lock: true,
-        text: this.$t('common.uploading'),
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传图片只能是 JPG || png 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传视频大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
     },
     /**
      * 上传成功
      */
-    handleUploadSuccess (response, raw) {
-      this.loadingInstance.close()
-      if (response.code === 200) {
-        this.form.pic_url = response.data.url
-      } else {
-        this.$message({
-          message: this.$t('common.uploadError'),
-          type: 'error'
-        })
-      }
+    handleUploadSuccess (res) {
+      const url = 'http://files.q.lidaokoi.com/' + res.key
+      console.log('url', url)
+    //   this.form.imgPath = url
     },
     /**
      * 删除上传的图片
@@ -335,7 +339,7 @@ export default {
   width: 100%;
   padding: 8px 0;
 
-  >>> .el-upload {
+    >>>  .el-upload {
     display: flex;
     align-items: center;
     justify-content: center;
