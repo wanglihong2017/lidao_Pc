@@ -3,10 +3,11 @@
     <div class="block">
       <el-row :gutter="20">
         <el-col :span="6">
-          <el-select v-model="listQuery.position" placeholder="请选择广告类别" size="mini" style="width: 100%;">
+          <!-- <el-select v-model="listQuery.position" placeholder="请选择广告类别" size="mini" style="width: 100%;">
             <el-option v-for="item in positionOpts" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
-          </el-select>
+          </el-select> -->
+          <el-input v-model="listQuery.searchText" placeholder="请输入内容"></el-input>
         </el-col>
         <el-col :span="18">
           <el-button type="primary" size="mini" icon="el-icon-search" @click.native="search">
@@ -38,53 +39,51 @@
     >
       <el-table-column label="ID">
         <template slot-scope="scope">
-          {{ scope.row.ad_id }}
+          {{ scope.row.userId }}
         </template>
       </el-table-column>
       <el-table-column label="标题">
         <template slot-scope="scope">
-          {{ scope.row.name }}
+          {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="类别">
+      <el-table-column label="内容">
         <template slot-scope="scope">
-          {{ scope.row.position | positionFilter(positionOpts) }}
+          {{ scope.row.content}}
         </template>
       </el-table-column>
 
-      <el-table-column label="跳转类型">
+      <el-table-column label="类型">
         <template slot-scope="scope">
-          {{ scope.row.type === 1 ? '文章' : '' }}
-          {{ scope.row.type === 2 ? '视频' : '' }}
-          {{ scope.row.type === 3 ? '外链' : '' }}
+          {{ scope.row.imgType === 1 ? '图片' : '视频' }}
         </template>
       </el-table-column>
-      <el-table-column label="链接/编号ID">
+      <!-- <el-table-column label="链接/编号ID">
         <template slot-scope="scope">
           {{ scope.row.link | linkFilter(scope.row.type) }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="状态" width="180">
         <template slot-scope="scope">
           <el-switch
-            v-model="scope.row.enabled"
-            :active-value="true"
-            :inactive-value="false"
+            v-model="scope.row.isDelete"
+            :active-value="1"
+            :inactive-value="0"
             active-text="开启"
+            disabled
             inactive-text="关闭"
-            @change="switchType(scope.row)"
           >
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column label="封面图" min-width="200">
+      <el-table-column label="广告图" min-width="200">
         <template slot-scope="scope">
-          <img :src="scope.row.pic_url" style="width: auto;height: auto;max-height: 80px;" />
+          <img :src="scope.row.imgPath" style="width: auto;height: auto;max-height: 80px;" />
         </template>
       </el-table-column>
       <el-table-column label="发布日期">
         <template slot-scope="scope">
-          {{ scope.row.inserted_at }}
+          {{ scope.row.createAt }}
         </template>
       </el-table-column>
       <!-- <el-table-column label="更新日期">
@@ -293,7 +292,7 @@
                 :on-success="handleUploadSuccess"
                 :data="{ token: token }"
               >
-                <img v-if="form.pic_url" :src="form.pic_url" class="img" />
+                <img v-if="form.imgPath" :src="form.imgPath" class="img" />
                 <template v-else>
                   <i class="el-icon-upload"></i>
                   <div class="el-upload__text">上传图片</div>
@@ -302,11 +301,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="标题" prop="name">
-              <el-input v-model="form.name" minlength="1"></el-input>
+            <el-form-item label="标题" prop="title">
+              <el-input v-model="form.title" minlength="1"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <!-- <el-col :span="12">
             <el-form-item label="链接/编号ID" prop="link">
               <el-input v-model="form.link" minlength="1"></el-input>
               <div style="font-size: 13px; color: #999; height: 24px; line-height:24px;">
@@ -316,36 +315,42 @@
                 *请填写需要跳转的链接，注意需要通过校验
               </div>
             </el-form-item>
-          </el-col>
-          <!-- <template v-if="form.position === 11">
-            <el-col :span="12">
+          </el-col> -->
+          <template>
+            <el-col :span="24">
               <el-form-item label="内容" prop="content">
                 <el-input v-model="form.content" type="textarea" :rows="2"> </el-input>
               </el-form-item>
             </el-col>
-          </template> -->
+          </template>
           <el-col :span="12">
-            <el-form-item label="跳转类型" prop="type">
-              <!-- <el-radio-group v-model="form.type" @change="switchGoType"> -->
-              <el-radio-group v-model="form.type">
-                <el-radio :label="1">文章</el-radio>
+            <el-form-item label="类型" prop="type">
+              <el-radio-group v-model="form.imgType">
+                <el-radio :label="1">图片</el-radio>
                 <el-radio :label="2">视频</el-radio>
-                <el-radio :label="3">外链</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="状态" prop="enabled">
-              <el-radio-group v-model="form.enabled">
-                <el-radio :label="false">关闭</el-radio>
-                <el-radio :label="true">开启</el-radio>
-              </el-radio-group>
+            <el-form-item label="状态" prop="isDelete">
+              <!-- <el-radio-group v-model="form.isDelete">
+                <el-radio :label="1">关闭</el-radio>
+                <el-radio :label="0">开启</el-radio>
+              </el-radio-group> -->
+               <el-switch
+                v-model="form.isDelete"
+                :active-value="1"
+                :inactive-value="0"
+                active-text="开启"
+                inactive-text="关闭"
+                >
+              </el-switch>
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item>
-          <el-button type="primary" @click="save">{{ $t('button.submit') }}</el-button>
-          <el-button @click.native="formVisible = false">{{ $t('button.cancel') }}</el-button>
+          <el-button type="primary" @click="save">确定</el-button>
+          <el-button @click.native="formVisible = false">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -353,10 +358,10 @@
 </template>
 
 <script>
-import { remove, getList, save, update, getPositionList } from '@/api/system/advert'
+import { remove, getList, save, update } from '@/api/system/advert'
 import { getToken } from '@/api/api'
 import { Loading } from 'element-ui'
-
+import util from '@/libs/util'
 export default {
   data () {
     return {
@@ -371,25 +376,20 @@ export default {
       formVisible: false,
       formTitle: '添加广告',
       deptList: [],
+      userId: '',
       form: {
-        ad_id: '',
-        name: '',
-        pic_url: '',
-        img: '',
-        link: '',
-        position: 1,
-        enabled: false,
+        title: '',
+        imgPath: '',
+        isDelete: 1,
         content: '',
-        type: 1 // 跳转类型 1:文章 2:视频 3:外链
+        id: '',
+        articleType: '7',
+        imgType: 1 // 跳转类型 1:文章 2:视频 3:外链
       },
       listQuery: {
         pageNum: 1,
         pageSize: 20,
-        searchText: '',
-        title: '',
-        startDate: '',
-        endDate: '',
-        position: ''
+        searchText: ''
       },
       list: null,
       total: 0,
@@ -421,9 +421,10 @@ export default {
   computed: {
     rules () {
       return {
-        name: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
-        pic_url: [{ required: true, message: '封面图不能为空', trigger: 'blur' }],
-        enabled: [{ required: true, message: '请选择状态', trigger: 'blur' }],
+        title: [{ required: true, message: '标题不能为空', trigger: 'blur' }],
+        content: [{ required: true, message: '内容不能为空', trigger: 'blur' }],
+        imgPath: [{ required: true, message: '封面图不能为空', trigger: 'blur' }],
+        isDelete: [{ required: true, message: '请选择状态', trigger: 'blur' }],
         position: [{ required: true, message: '未知不能为空', trigger: 'blur' }]
       }
     }
@@ -436,18 +437,15 @@ export default {
         this.token = data
       }
     })
+    const uuid = util.cookies.get('uuid')
+    if (uuid) {
+      this.userId = uuid
+      console.log('this.form.userId', this.userId)
+    }
   },
   methods: {
     async init () {
-      try {
-        // const {
-        //   data: { position_options }
-        // } = await getPositionList()
-        // this.positionOpts = position_options
-        this.fetchData()
-      } catch (err) {
-        console.log(err)
-      }
+      this.fetchData()
     },
     fetchData () {
       this.listLoading = true
@@ -463,7 +461,7 @@ export default {
     },
     reset () {
       this.listQuery.position = ''
-      this.listQuery.name = ''
+      this.listQuery.title = ''
       this.listQuery.pageNum = 1
       this.fetchData()
     },
@@ -475,13 +473,12 @@ export default {
     },
     resetForm () {
       this.form = {
-        ad_id: '',
-        name: '',
-        pic_url: '',
-        link: '',
-        position: 1,
-        enabled: false,
-        type: 1
+        title: '',
+        imgPath: '',
+        content: '',
+        isDelete: 1,
+        imgType: 1,
+        id: ''
       }
     },
     fetchNext () {
@@ -502,32 +499,22 @@ export default {
     },
     add () {
       this.resetForm()
-      this.switchGoType(1) // 设置 form.content 值
       this.formTitle = '添加广告'
       this.formVisible = true
     },
     save () {
       this.$refs.form.validate(valid => {
         if (valid) {
-          let prefixstr = ''
-          if (this.form.type === 1) {
-            prefixstr = '/pages/article/message/detail?id='
-          } else if (this.form.type === 2) {
-            prefixstr = '/pages/article/media/detail?id='
-          } else if (this.form.type === 3) {
-            console.log('')
-          }
-          if (this.form.ad_id) {
+          if (this.form.id) {
             update({
-              ad_id: this.form.ad_id,
-              type: this.form.type,
-              name: this.form.name,
-              link: prefixstr + (this.form.link || ''),
-              pic_url: this.form.pic_url,
-              position: this.form.position,
-              enabled: this.form.enabled || false,
-              // content: this.form.content || ''
-              content: ''
+              userId: this.userId,
+              imgType: this.form.imgType,
+              title: this.form.title,
+              imgPath: this.form.imgPath,
+              isDelete: this.form.isDelete,
+              content: this.form.content || '',
+              articleType: '7',
+              id: this.form.id
             }).then(response => {
               this.$message({
                 message: this.$t('common.optionSuccess'),
@@ -538,15 +525,13 @@ export default {
             })
           } else {
             save({
-              ad_id: this.form.ad_id || '',
-              type: this.form.type,
-              name: this.form.name,
-              link: prefixstr + (this.form.link || ''),
-              pic_url: this.form.pic_url,
-              position: this.form.position,
-              enabled: this.form.enabled || false,
-              // content: this.form.content || ''
-              content: ''
+              userId: this.userId,
+              imgType: this.form.imgType,
+              title: this.form.title,
+              imgPath: this.form.imgPath,
+              isDelete: this.form.isDelete,
+              content: this.form.content || '',
+              articleType: '7'
             }).then(response => {
               this.$message({
                 message: this.$t('common.optionSuccess'),
@@ -556,86 +541,38 @@ export default {
               this.formVisible = false
             })
           }
-        } else {
-          return false
         }
       })
-    },
-    checkSel () {
-      if (this.selRow && this.selRow.ad_id) {
-        return true
-      }
-      this.$message({
-        message: this.$t('common.mustSelectOne'),
-        type: 'warning'
-      })
-      return false
     },
     removeItem (record) {
       this.selRow = record
       this.remove()
     },
     remove () {
-      if (this.checkSel()) {
-        const ad_id = this.selRow.ad_id
-        this.$confirm(this.$t('common.deleteConfirm'), this.$t('common.tooltip'), {
-          confirmButtonText: this.$t('button.submit'),
-          cancelButtonText: this.$t('button.cancel'),
-          type: 'warning'
-        })
-          .then(() => {
-            remove(ad_id).then(response => {
-              this.$message({
-                message: this.$t('common.optionSuccess'),
-                type: 'success'
-              })
-              this.fetchData()
+      const userId = this.selRow.userId
+      this.$confirm(this.$t('common.deleteConfirm'), this.$t('common.tooltip'), {
+        confirmButtonText: this.$t('button.submit'),
+        cancelButtonText: this.$t('button.cancel'),
+        type: 'warning'
+      })
+        .then(() => {
+          remove(userId).then(response => {
+            this.$message({
+              message: this.$t('common.optionSuccess'),
+              type: 'success'
             })
+            this.fetchData()
           })
-          .catch(() => {})
-      }
+        })
+        .catch(() => {})
     },
     /**
      * 关闭/开启 开关
      */
-    switchType (record) {
-      update({
-        ad_id: record.ad_id || '',
-        name: record.name,
-        link: record.link || '',
-        pic_url: record.pic_url,
-        position: record.position,
-        enabled: record.enabled || false,
-        content: record.content || ''
-      })
-        .then(response => {
-          this.$message({
-            message: this.$t('common.optionSuccess'),
-            type: 'success'
-          })
-          this.fetchData()
-        })
-        .catch(() => {
-          record.enabled = !record.enabled
-        })
-    },
     editItem (record) {
-      this.selRow = JSON.parse(JSON.stringify(record))
-      if (
-        this.selRow.type <= 2 &&
-        (this.selRow.link.indexOf('/pages/article/message/detail?id=') > -1 ||
-          this.selRow.link.indexOf('/pages/article/media/detail?id=') > -1)
-      ) {
-        this.selRow.link = this.selRow.link.split('?id=')[1]
-      }
-      this.edit()
-    },
-    edit () {
-      if (this.checkSel()) {
-        this.form = this.selRow
-        this.formTitle = '修改广告'
-        this.formVisible = true
-      }
+      this.form = record
+      this.formTitle = '修改广告'
+      this.formVisible = true
     },
     /**
      * 上传文件前处理
@@ -645,10 +582,10 @@ export default {
       const isLt2M = file.size / 1024 / 1024 < 2
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!')
+        this.$message.error('上传图片只能是 JPG || png 格式!')
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error('上传视频大小不能超过 2MB!')
       }
       return isJPG && isLt2M
     },
@@ -658,8 +595,8 @@ export default {
     handleUploadSuccess (res) {
       const url = 'http://files.q.lidaokoi.com/' + res.key
       console.log('url', url)
-      this.form.pic_url = url
-    },
+      this.form.imgPath = url
+    }
     // handleUploadSuccess (response, raw) {
     //   this.loadingInstance.close()
     //   if (response.code === 200) {
@@ -674,17 +611,6 @@ export default {
     /**
      * 选择跳转类型
      */
-    switchGoType (value) {
-      if (value === 1) {
-        // 文章
-        this.form.content = '/pages/article/message/detail?id='
-      } else if (value === 2) {
-        // 视屏
-        this.form.content = '/pages/article/media/detail?id='
-      } else {
-        // 外链
-      }
-    }
   }
 }
 </script>
