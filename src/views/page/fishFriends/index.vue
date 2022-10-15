@@ -1,29 +1,15 @@
 <template>
   <div class="app-container">
     <div class="block">
-      <!-- <el-row :gutter="20">
-        <el-col :span="6">
-          <el-input v-model="listQuery.title" size="mini" placeholder="标题"></el-input>
-        </el-col>
-        <el-col :span="18">
-          <el-button type="primary" size="mini" icon="el-icon-search" @click.native="search">
-            {{ $t('button.search') }}
-          </el-button>
-          <el-button type="primary" size="mini" icon="el-icon-refresh" @click.native="reset">
-            {{ $t('button.reset') }}
-          </el-button>
-        </el-col>
-      </el-row> -->
-
       <el-row>
         <el-col :span="24">
-          <el-button
+          <!-- <el-button
             type="success"
             size="mini"
             icon="el-icon-plus"
             @click.native="add">
             添加
-          </el-button>
+          </el-button> -->
         </el-col>
       </el-row>
     </div>
@@ -37,14 +23,31 @@
       highlight-current-row
       @current-change="handleCurrentChange"
     >
-      <el-table-column label="ID">
+      <el-table-column label="ID" width="100px">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
       </el-table-column>
       <el-table-column label="关键字">
         <template slot-scope="scope">
-          {{ scope.row.name }}
+          {{ scope.row.userName }}
+        </template>
+      </el-table-column>
+       <el-table-column label="头像">
+        <template slot-scope="scope">
+           <div class="img_box">
+             <img :src="scope.row.imgPath" alt="" />
+           </div>
+        </template>
+      </el-table-column>
+       <el-table-column label="联系方式">
+        <template slot-scope="scope">
+          {{ scope.row.userPhone }}
+        </template>
+      </el-table-column>
+      <el-table-column label="类型">
+        <template slot-scope="scope">
+          {{ scope.row.userType==1?'普通用户': scope.row.userType==2?'专家':'客服'}}
         </template>
       </el-table-column>
       <el-table-column label="发布日期">
@@ -93,8 +96,13 @@
             </el-form-item> -->
           </el-col>
           <el-col :span="12">
-            <el-form-item label="标题" prop="keyword">
-              <el-input v-model="form.keyword" minlength="1" placeholder="请输入关键字"></el-input>
+            <el-form-item label="类型" prop="userType">
+              <!-- <el-input v-model="form.userType" minlength="1" placeholder="请输入关键字"></el-input> -->
+              <el-radio-group v-model="form.userType">
+                <el-radio :label="1">普通用户</el-radio>
+                <el-radio :label="2">专家</el-radio>
+                <el-radio :label="3">客服</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
@@ -110,13 +118,13 @@
 <script>
 import { fishFriendsList, fishFriendsupdateType } from '@/api/system/user.js'
 export default {
-  name: 'keyword',
+  name: 'userType',
   data () {
     return {
       formVisible: false,
-      formTitle: '添加搜索关键字',
+      formTitle: '修改鱼友类型',
       form: {
-        keyword: '',
+        userType: 1,
         keyword_id: ''
       },
       listQuery: {
@@ -138,7 +146,7 @@ export default {
   computed: {
     rules () {
       return {
-        keyword: [{ required: true, message: '关键字不能为空', trigger: 'blur' }]
+        userType: [{ required: true, message: '请选择', trigger: 'blur' }]
       }
     }
   },
@@ -174,7 +182,7 @@ export default {
     },
     resetForm () {
       this.form = {
-        keyword: ''
+        userType: ''
       }
     },
     fetchNext () {
@@ -193,18 +201,13 @@ export default {
       this.listQuery.pageSize = pageSize
       this.fetchData()
     },
-    add () {
-      this.resetForm()
-      this.formTitle = '添加搜索关键字'
-      this.formVisible = true
-    },
     save () {
       this.$refs.form.validate(valid => {
         if (valid) {
           if (this.form.keyword_id) {
             fishFriendsupdateType({
               id: this.form.keyword_id,
-              name: this.form.keyword
+              userType: this.form.userType
             }).then(response => {
               this.$message({
                 message: '编辑成功',
@@ -213,21 +216,7 @@ export default {
               this.fetchData()
               this.formVisible = false
             })
-          } else {
-            fishFriendsupdateType({
-              keyword_id: this.form.keyword_id || '',
-              name: this.form.keyword
-            }).then(response => {
-              this.$message({
-                message: '保存成功',
-                type: 'success'
-              })
-              this.fetchData()
-              this.formVisible = false
-            })
           }
-        } else {
-          return false
         }
       })
     },
@@ -241,9 +230,9 @@ export default {
       this.edit()
     },
     edit () {
-      this.form.keyword = this.selRow.name
+      this.form.userType = this.selRow.userType
       this.form.keyword_id = this.selRow.id
-      this.formTitle = '修改搜索关键字'
+      this.formTitle = '修改鱼友类型'
       this.formVisible = true
     }
   }
@@ -252,6 +241,15 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.img_box {
+  width: 70px;
+  height: 70px;
+  img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+}
 .advert-uploader {
   >>> .el-upload {
     display: flex;
