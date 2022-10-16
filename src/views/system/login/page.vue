@@ -1,29 +1,24 @@
 <template>
   <div class="page-login">
-    <div class="page-login--layer page-login--layer-area">
+    <!-- <div class="page-login--layer page-login--layer-area">
       <ul class="circles">
         <li v-for="n in 10" :key="n"></li>
       </ul>
-    </div>
-    <div
+    </div> -->
+    <!-- <div
       class="page-login--layer page-login--layer-time"
       flex="main:center cross:center">
       {{time}}
-    </div>
+    </div> -->
     <div class="page-login--layer">
-      <div
-        class="page-login--content"
-        flex="dir:top main:justify cross:stretch box:justify">
-        <div class="page-login--content-header">
-          <p class="page-login--content-header-motto">
-            时间是一切财富中最宝贵的财富
-          </p>
+      <div class="page-login--content">
+        <div flex="dir:top main:center cross:center">
+            <p class="logo_text"> 时间就是财富{{time}}</p>
         </div>
-        <div
-          class="page-login--content-main"
-          flex="dir:top main:center cross:center">
+        <div flex="dir:top main:center cross:center">
           <!-- logo -->
-          <img class="page-login--logo" src="https://files.q.lidaokoi.com/imgs/logo.jpeg">
+          <!-- <img class="page-login--logo" src="https://files.q.lidaokoi.com/imgs/logo.jpeg"> -->
+          <p class="title_text">鲤道后台管理</p>
           <!-- form -->
           <div class="page-login--form">
             <el-card shadow="never">
@@ -69,10 +64,9 @@
               </el-form>
             </el-card>
             <!-- <p
-              class="page-login--options"
-              flex="main:justify cross:center">
-              <span><d2-icon name="question-circle"/> 忘记密码</span>
-              <span>注册用户</span>
+              class="page-login--options">
+              <span><d2-icon name="question-circle"/> 账户: admin</span>
+              <span>1</span>
             </p> -->
             <!-- quick login -->
             <!-- <el-button class="page-login--quick" size="default" type="info" @click="dialogVisible = true">
@@ -81,43 +75,10 @@
           </div>
         </div>
         <div class="page-login--content-footer">
-          <p class="page-login--content-footer-locales">
-            <a
-              v-for="language in $languages"
-              :key="language.value"
-              @click="onChangeLocale(language.value)">
-              {{ language.label }}
-            </a>
-          </p>
-          <p class="page-login--content-footer-copyright">
-            Copyright
-            <d2-icon name="copyright"/>
-            2018 D2 Projects 开源组织出品
-            <a href="https://github.com/FairyEver">
-              @FairyEver
-            </a>
-          </p>
-          <p class="page-login--content-footer-options">
-            <a href="#">帮助</a>
-            <a href="#">隐私</a>
-            <a href="#">条款</a>
-          </p>
+
         </div>
       </div>
     </div>
-    <el-dialog
-      title="快速选择用户"
-      :visible.sync="dialogVisible"
-      width="400px">
-      <el-row :gutter="10" style="margin: -20px 0px -10px 0px;">
-        <el-col v-for="(user, index) in users" :key="index" :span="8">
-          <div class="page-login--quick-user" @click="handleUserBtnClick(user)">
-            <d2-icon name="user-circle-o"/>
-            <span>{{user.name}}</span>
-          </div>
-        </el-col>
-      </el-row>
-    </el-dialog>
   </div>
 </template>
 
@@ -138,24 +99,14 @@ export default {
       users: [
         {
           name: 'Admin',
-          username: 'admin',
-          password: 'admin'
-        },
-        {
-          name: 'Editor',
-          username: 'editor',
-          password: 'editor'
-        },
-        {
-          name: 'User1',
-          username: 'user1',
-          password: 'user1'
+          username: '',
+          password: ''
         }
       ],
       // 表单
       formLogin: {
-        username: 'admin',
-        password: 'admin',
+        username: '',
+        password: '',
         code: 'v9am'
       },
       // 表单校验
@@ -261,12 +212,11 @@ export default {
   }
   // 登陆页面控件的容器
   .page-login--content {
-    height: 100%;
-    min-height: 500px;
+    height: 10%;
+    margin-top: 10%;
   }
   // header
   .page-login--content-header {
-    padding: 1em 0;
     .page-login--content-header-motto {
       margin: 0px;
       padding: 0px;
@@ -276,14 +226,9 @@ export default {
     }
   }
   // main
-  .page-login--logo {
-    width: 240px;
-    margin-bottom: 2em;
-    margin-top: -2em;
-  }
   // 登录表单
   .page-login--form {
-    width: 280px;
+    width: 400px;
     // 卡片
     .el-card {
       margin-bottom: 15px;
@@ -316,29 +261,8 @@ export default {
       width: 100%;
     }
   }
-  // 快速选择用户面板
-  .page-login--quick-user {
-    @extend %flex-center-col;
-    padding: 10px 0px;
-    border-radius: 4px;
-    &:hover {
-      background-color: $color-bg;
-      i {
-        color: $color-text-normal;
-      }
-      span {
-        color: $color-text-normal;
-      }
-    }
-    i {
-      font-size: 36px;
-      color: $color-text-sub;
-    }
-    span {
-      font-size: 12px;
-      margin-top: 10px;
-      color: $color-text-sub;
-    }
+  .pagelogin{
+    margin: 30px;
   }
   // footer
   .page-login--content-footer {
@@ -480,6 +404,15 @@ export default {
         animation-duration: 11s;
       }
     }
+  }
+  .el-card__body{
+    padding: 40px;
+  }
+  .title_text{
+    font-size: 28px;
+  }
+  .logo_text{
+    color: #999;
   }
 }
 </style>
