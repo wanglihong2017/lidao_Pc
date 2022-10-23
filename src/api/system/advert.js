@@ -1,6 +1,6 @@
 import $qs from 'qs'
 import { request } from '../service'
-const baseUrl = process.env.VUE_APP_BASE_API
+const baseUrl = 'https://mini.lidaokoi.com'
 export function getList (params) {
   return request({
     url: baseUrl + '/luckyfish/manager_ad/v1/getManagerAdList?' + $qs.stringify(params),

@@ -360,13 +360,13 @@
 <script>
 import { remove, getList, save, update, updateDelete } from '@/api/system/advert'
 import { getToken } from '@/api/api'
-import { Loading } from 'element-ui'
+// import { Loading } from 'element-ui'
 import util from '@/libs/util'
 export default {
   data () {
     return {
       positionOpts: [],
-      uploadUrl: process.env.VUE_APP_UPLOAD_API, // 上传地址
+      uploadUrl: 'https://up-z2.qiniup.com', // 上传地址
       // 上传请求头部信息
       uploadHeaders: {
         // Authorization: getToken()
@@ -568,7 +568,7 @@ export default {
         .then(() => {
           remove({ id: userId }).then(response => {
             this.$message({
-              message: this.$t('common.optionSuccess'),
+              message: '删除成功',
               type: 'success'
             })
             this.fetchData()
@@ -589,13 +589,13 @@ export default {
      */
     beforeAvatarUpload (file) {
       const isJPG = file.type === 'image/jpeg' || file.type === 'image/png'
-      const isLt2M = file.size / 1024 / 1024 < 2
+      const isLt2M = file.size / 1024 / 1024 < 20
 
       if (!isJPG) {
         this.$message.error('上传图片只能是 JPG || png 格式!')
       }
       if (!isLt2M) {
-        this.$message.error('上传视频大小不能超过 2MB!')
+        this.$message.error('上传视频大小不能超过 20MB!')
       }
       return isJPG && isLt2M
     },

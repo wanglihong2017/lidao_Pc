@@ -130,7 +130,7 @@ export default {
       defaultText: '',
       // 富文本更新的值
       richText: '',
-      uploadUrl: process.env.VUE_APP_UPLOAD_API, // 上传地址
+      uploadUrl: 'https://up-z2.qiniup.com', // 上传地址
       // 上传请求头部信息
       uploadHeaders: {
         // Authorization: getToken()
