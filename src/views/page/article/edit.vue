@@ -223,6 +223,7 @@ export default {
       } else {
         this.defaultText = ''
       }
+      this.form.billType = type
     },
 
     /**
