@@ -79,3 +79,34 @@ export function getManagerList (params) {
     method: 'get'
   })
 }
+// 话题状态设置  https://mini.lidaokoi.com/luckyfish/manager_topic/v1/updateState
+export function updateState (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manager_topic/v1/updateState',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}
+// 话题修改  https://mini.lidaokoi.com/luckyfish/manager_topic/v1/update
+export function topicupdate (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manager_topic/v1/update',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}
+// 话题增加 https://mini.lidaokoi.com/luckyfish/manager_topic/v1/add
+export function topicadd (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manager_topic/v1/add',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}
+export function topicdelete (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manager_topic/v1/delete',
+    method: 'post',
+    data: $qs.stringify(params)
+  })
+}

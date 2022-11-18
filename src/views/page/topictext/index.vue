@@ -37,14 +37,27 @@
       highlight-current-row
       @current-change="handleCurrentChange"
     >
-      <el-table-column label="ID">
+      <!-- <el-table-column label="ID">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="话题内容">
         <template slot-scope="scope">
           {{ scope.row.name }}
+        </template>
+      </el-table-column>
+       <el-table-column label="状态">
+        <template slot-scope="scope">
+           <el-switch
+            v-model="scope.row.state"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            :active-value="1"
+            :inactive-value="0"
+            @change="setStatebtn(scope.row)"
+            >
+        </el-switch>
         </template>
       </el-table-column>
       <el-table-column label="发布日期">
@@ -102,7 +115,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="标题" prop="keyword">
-              <el-input v-model="form.keyword" minlength="1" placeholder="请输入关键字"></el-input>
+              <el-input v-model="form.keyword" minlength="1" placeholder="请输入标题"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -116,16 +129,17 @@
 </template>
 
 <script>
-import { keyworDelete, getManagerList, keyworAdd } from '@/api/system/user.js'
+import { topicdelete, getManagerList, topicadd, topicupdate, updateState } from '@/api/system/user.js'
 export default {
   name: 'keyword',
   data () {
     return {
       formVisible: false,
-      formTitle: '添加搜索关键字',
+      formTitle: '添加话题',
       form: {
         keyword: '',
-        keyword_id: ''
+        keyword_id: '',
+        state: 1
       },
       listQuery: {
         pageNum: 1,
@@ -146,7 +160,7 @@ export default {
   computed: {
     rules () {
       return {
-        keyword: [{ required: true, message: '关键字不能为空', trigger: 'blur' }]
+        keyword: [{ required: true, message: '话题不能为空', trigger: 'blur' }]
       }
     }
   },
@@ -203,15 +217,16 @@ export default {
     },
     add () {
       this.resetForm()
-      this.formTitle = '添加搜索关键字'
+      this.formTitle = '添加话题'
       this.formVisible = true
     },
     save () {
       this.$refs.form.validate(valid => {
         if (valid) {
           if (this.form.keyword_id) {
-            keyworAdd({
+            topicupdate({
               id: this.form.keyword_id,
+              state: this.form.state,
               name: this.form.keyword
             }).then(response => {
               this.$message({
@@ -222,7 +237,7 @@ export default {
               this.formVisible = false
             })
           } else {
-            keyworAdd({
+            topicadd({
               keyword_id: this.form.keyword_id || '',
               name: this.form.keyword
             }).then(response => {
@@ -243,6 +258,16 @@ export default {
       this.selRow = record
       this.remove()
     },
+    setStatebtn (e) {
+      const params = {
+        state: e.state,
+        id: e.id
+      }
+      updateState(params).then((res) => {
+        console.log('res', res)
+        this.fetchData()
+      })
+    },
     remove () {
       // eslint-disable-next-line camelcase
       const keyword_id = this.selRow.id
@@ -252,7 +277,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          keyworDelete({ id: keyword_id }).then(response => {
+          topicdelete({ id: keyword_id }).then(response => {
             this.$message({
               message: '删除成功',
               type: 'success'
@@ -268,6 +293,7 @@ export default {
     //   type: 'success'
     // })
     editItem (record) {
+      console.log('record', record)
       this.selRow = Object.assign({}, record)
       console.log('this.selRow', this.selRow)
       this.edit()
@@ -275,7 +301,8 @@ export default {
     edit () {
       this.form.keyword = this.selRow.name
       this.form.keyword_id = this.selRow.id
-      this.formTitle = '修改搜索关键字'
+      this.form.state = this.selRow.state
+      this.formTitle = '修改话题'
       this.formVisible = true
     }
   }
