@@ -94,6 +94,15 @@ const frameIn = [
         component: _import('page/article/edit')
       },
       {
+        path: 'topictext',
+        name: 'topictext',
+        meta: {
+          title: '话题设计',
+          auth: true
+        },
+        component: _import('page/topictext')
+      },
+      {
         path: 'role',
         name: 'role',
         meta: {

@@ -72,3 +72,10 @@ export function fishFriendsupdateType (params) {
     data: $qs.stringify(params)
   })
 }
+// 话题设置  https://mini.lidaokoi.com/luckyfish/manager_topic/v1/getManagerList?pageNum=1&pageSize=10
+export function getManagerList (params) {
+  return request({
+    url: baseUrl + '/luckyfish/manager_topic/v1/getManagerList?' + $qs.stringify(params),
+    method: 'get'
+  })
+}

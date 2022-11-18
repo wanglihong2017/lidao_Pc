@@ -23,6 +23,7 @@ export const menuHeader = supplementPath([
   { path: '/advert', title: '广告管理', icon: 'folder-o' },
   { path: '/article', title: '咨询发布', icon: 'folder-o' },
   { path: '/keyword', title: '关键字管理', icon: 'folder-o' },
+  { path: '/topictext', title: '话题设置', icon: 'folder-o' },
   { path: '/role', title: '角色管理', icon: 'folder-o' },
   // {
   //   title: '评论',
@@ -42,6 +43,7 @@ export const menuAside = supplementPath([
   { path: '/advert', title: '广告管理', icon: 'folder-o' },
   { path: '/article', title: '咨询发布', icon: 'folder-o' },
   { path: '/keyword', title: '关键字管理', icon: 'folder-o' },
+  { path: '/topictext', title: '话题设置', icon: 'folder-o' },
   { path: '/user', title: '用户管理', icon: 'home' },
   { path: '/role', title: '角色管理', icon: 'folder-o' }
 ])
