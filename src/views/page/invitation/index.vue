@@ -18,7 +18,7 @@
             range-separator="至"
             start-placeholder="发布起始日期"
             end-placeholder="发布截至日期"
-            value-format="yyyyMMddHHmmss"
+            value-format="yyyy-MM-dd"
             align="right"
           >
           </el-date-picker>
